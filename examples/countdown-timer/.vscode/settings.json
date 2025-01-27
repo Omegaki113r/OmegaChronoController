@@ -2,5 +2,11 @@
     "idf.openOcdConfigs": [
         "interface/ftdi/esp32_devkitj_v1.cfg",
         "target/esp32s3.cfg"
-    ]
+    ],
+    "idf.portWin": "COM19",
+    "idf.flashType": "UART",
+    "files.associations": {
+        "*.tcc": "cpp",
+        "format": "cpp"
+    }
 }
