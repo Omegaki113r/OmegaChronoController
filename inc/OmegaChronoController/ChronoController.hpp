@@ -10,7 +10,7 @@
  * File Created: Monday, 27th January 2025 8:21:55 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 28th January 2025 1:55:11 am
+ * Last Modified: Wednesday, 29th January 2025 4:22:24 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -30,6 +30,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/timers.h>
 
+#include "OmegaChronoController/ChronoBaseController.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
 #ifdef __cplusplus
@@ -38,62 +39,40 @@ namespace Omega
 {
     namespace Chrono
     {
-        enum class Type
-        {
-            ePERIODIC,
-            eSINGLE_SHOT,
-            eCOUNTDOWN,
-            eCOUNTUP
-        };
 
-        enum class State
-        {
-            eIDLE,
-            eCREATED,
-            eSTARTED,
-            ePAUSED,
-            eSTOPPED,
-            eDELETED,
-        };
-
-        struct Duration
-        {
-            u64 us;
-            u32 ms;
-            u32 s;
-            u16 m;
-            u16 h;
-
-            Duration(u64 in_duration_us);
-            bool operator==(const Duration &other) const
-            {
-                return h == other.h && m == other.m && s == other.s && ms == other.ms && us == other.us;
-            }
-        };
-
-        class FreeRTOS
+        class FreeRTOS : public Base
         {
         public:
             FreeRTOS(Type in_type = Type::eSINGLE_SHOT, Duration in_duration = {0}, Duration in_update_period = {0}, Duration in_delay = {0})
-                : type(in_type), duration(in_duration), update_period(in_update_period), delay(in_delay) {}
+                : Base(in_type, in_duration, in_update_period, in_delay) {}
             ~FreeRTOS();
 
-            inline void set_type(Type in_type) noexcept { type = in_type; }
-            inline void set_duration(Duration in_duration) noexcept { duration = in_duration; }
-            inline void set_update_period(Duration in_update_period) noexcept { update_period = in_update_period; }
-            inline void set_delay(Duration in_delay) noexcept { delay = in_delay; }
-            inline void add_on_start_callback(std::function<void(void)> in_callback) noexcept { on_start = in_callback; }
-            inline void add_on_update_callback(std::function<void(void)> in_callback) noexcept { on_update = in_callback; }
-            inline void add_on_end_callback(std::function<void(void)> in_callback) noexcept { on_end = in_callback; }
-            OmegaStatus start() noexcept;
-            OmegaStatus pause() noexcept;
-            OmegaStatus resume() noexcept;
-            OmegaStatus stop() noexcept;
+            inline void set_name(const char *in_name) override
+            {
+                if (nullptr == in_name || 0 == std::strlen(in_name))
+                    return;
+                UNUSED(std::memcpy(name, in_name, OMEGA_MIN(std::strlen(in_name), sizeof(name))));
+            }
+            inline void set_type(Type in_type) noexcept override { type = in_type; }
+            inline void set_duration(Duration in_duration) noexcept override { duration = in_duration; }
+            inline void set_update_period(Duration in_update_period) noexcept override { update_period = in_update_period; }
+            inline void set_delay(Duration in_delay) noexcept override { delay = in_delay; }
+            inline void add_on_start_callback(std::function<void(void)> in_callback) noexcept override { on_start = in_callback; }
+            inline void add_on_update_callback(std::function<void(void)> in_callback) noexcept override { on_update = in_callback; }
+            inline void add_on_end_callback(std::function<void(void)> in_callback) noexcept override { on_end = in_callback; }
+            OmegaStatus start() noexcept override;
+            OmegaStatus pause() noexcept override;
+            OmegaStatus resume() noexcept override;
+            OmegaStatus stop() noexcept override;
 
-            inline Type get_type() const noexcept { return type; }
-            inline Duration get_duration() const noexcept { return duration; }
-            inline Duration get_update_period() const noexcept { return update_period; }
-            inline Duration get_delay() const noexcept { return delay; }
+            inline const char *get_name() const noexcept override { return name; }
+            inline Type get_type() const noexcept override { return type; }
+            inline Duration get_duration() const noexcept override { return duration; }
+            inline Duration get_update_period() const noexcept override { return update_period; }
+            inline Duration get_delay() const noexcept override { return delay; }
+            inline std::function<void(void)> get_start() const noexcept { return on_start; }
+            inline std::function<void(void)> get_update() const noexcept { return on_update; }
+            inline std::function<void(void)> get_end() const noexcept { return on_end; }
 
             FreeRTOS(FreeRTOS &other) = delete;
             FreeRTOS &operator=(FreeRTOS &) = delete;
@@ -101,15 +80,6 @@ namespace Omega
             FreeRTOS &operator=(FreeRTOS &&) = delete;
 
         private:
-            Type type;
-            Duration duration;
-            Duration update_period;
-            Duration delay;
-            std::function<void(void)> on_start;
-            std::function<void(void)> on_update;
-            std::function<void(void)> on_end;
-            State state{State::eIDLE};
-            TimerHandle_t handle;
         };
     } // namespace Chrono
 } // namespace Omega

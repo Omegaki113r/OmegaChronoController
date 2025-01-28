@@ -7,6 +7,15 @@
     "idf.flashType": "UART",
     "files.associations": {
         "*.tcc": "cpp",
-        "format": "cpp"
+        "format": "cpp",
+        "array": "cpp",
+        "charconv": "cpp",
+        "compare": "cpp",
+        "functional": "cpp",
+        "ratio": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "variant": "cpp"
     }
 }
