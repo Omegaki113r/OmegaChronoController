@@ -10,7 +10,7 @@
  * File Created: Monday, 27th January 2025 8:22:29 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 28th January 2025 2:04:36 am
+ * Last Modified: Wednesday, 29th January 2025 3:09:03 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -63,38 +63,70 @@ namespace Omega
 {
     namespace Chrono
     {
-        Duration::Duration(u64 in_duration_us) : us(in_duration_us), ms(us / 1000), s(ms / 1000), m(s / 60), h(m / 60) { LOGD("%lld %ld %ld %d %d", us, ms, s, m, h); }
-
         FreeRTOS::~FreeRTOS()
         {
-            // if (nullptr == handle)
-            //     return;
-            // xTimerDelete(handle, portMAX_DELAY);
-            LOGD("Cleaned");
+            if (handle)
+            {
+                xTimerDelete(handle, portMAX_DELAY);
+            }
         }
 
         OmegaStatus FreeRTOS::start() noexcept
         {
-            const auto x = [](TimerHandle_t handle)
-            { LOGE("Critical error"); };
-            if (Duration(0) == duration)
+            const auto on_period_elapsed_handler = [](TimerHandle_t handle)
             {
-                LOGE("Invalid duration: %lld", duration.us);
+                auto controller = (FreeRTOS *)pvTimerGetTimerID(handle);
+                const auto on_update = controller->get_update();
+                LOGD("[%s] => [Elapsed]", controller->get_name());
+                if (on_update)
+                    on_update();
+            };
+            const auto on_delay_expired_handler = [](TimerHandle_t handle)
+            {
+                const auto delay_expire_semaphore = (SemaphoreHandle_t *)pvTimerGetTimerID(handle);
+                xSemaphoreGive(*delay_expire_semaphore);
+            };
+            const auto zero = Duration(0);
+            if (0 >= pdMS_TO_TICKS(duration.ms))
+            {
+                LOGE("Invalid duration: %ld ms | %ld ticks", duration.ms, pdMS_TO_TICKS(duration.ms));
                 return eFAILED;
             }
-            handle = xTimerCreate("timer", pdMS_TO_TICKS(duration.ms), pdFALSE, nullptr, x);
+            handle = xTimerCreate("timer", pdMS_TO_TICKS(duration.ms), pdTRUE, this, on_period_elapsed_handler);
             if (nullptr == handle)
             {
                 LOGE("xTimerCreate failed");
                 return eFAILED;
             }
-            delay_ms(delay.ms);
+            if (zero > pdMS_TO_TICKS(delay.ms))
+            {
+                StaticSemaphore_t semaphore_buffer;
+                auto delay_expire_semaphore = xSemaphoreCreateBinaryStatic(&semaphore_buffer);
+                if (!delay_expire_semaphore)
+                {
+                    LOGE("Semaphore Creation failed");
+                    return eFAILED;
+                }
+                const auto delay_expire_handle = xTimerCreate("timer1", pdMS_TO_TICKS(delay.ms), pdFALSE, &delay_expire_semaphore, on_delay_expired_handler);
+                if (!delay_expire_handle)
+                {
+                    LOGE("Delay timer creation failed");
+                    return eFAILED;
+                }
+                if (const auto err = xTimerStart(delay_expire_handle, portMAX_DELAY); pdPASS != err)
+                {
+                    LOGE("Delay timer start failed");
+                    return eFAILED;
+                }
+                xSemaphoreTake(delay_expire_semaphore, portMAX_DELAY);
+            }
             if (const auto err = xTimerStart(handle, portMAX_DELAY); pdPASS != err)
             {
                 LOGE("xTimerStart failed");
                 return eFAILED;
             }
-            if (nullptr != on_start)
+            LOGD("[%s] => [Started]", get_name());
+            if (on_start)
                 on_start();
             return eSUCCESS;
         }
