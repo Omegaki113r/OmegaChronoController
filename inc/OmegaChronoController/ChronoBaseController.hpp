@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:14:46 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 29th January 2025 4:22:26 am
+ * Last Modified: Thursday, 30th January 2025 9:59:18 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -84,6 +84,37 @@ namespace Omega
                 };
                 return calculate_total_us(*this) < calculate_total_us(other);
             }
+
+            constexpr bool operator<=(const Duration &other) const
+            {
+                const auto calculate_total_us = [](const Duration &duration)
+                {
+                    const auto hour_us = duration.h * 60 * 60 * 1000 * 1000;
+                    const auto minutes_us = duration.m * 60 * 1000 * 1000;
+                    const auto seconds_us = duration.s * 1000 * 1000;
+                    const auto milliseconds_us = duration.ms * 1000;
+                    return hour_us + minutes_us + seconds_us + milliseconds_us + duration.us;
+                };
+                return calculate_total_us(*this) <= calculate_total_us(other);
+            }
+
+            constexpr bool operator>=(const Duration &other) const
+            {
+                const auto calculate_total_us = [](const Duration &duration)
+                {
+                    const auto hour_us = duration.h * 60 * 60 * 1000 * 1000;
+                    const auto minutes_us = duration.m * 60 * 1000 * 1000;
+                    const auto seconds_us = duration.s * 1000 * 1000;
+                    const auto milliseconds_us = duration.ms * 1000;
+                    return hour_us + minutes_us + seconds_us + milliseconds_us + duration.us;
+                };
+                return calculate_total_us(*this) >= calculate_total_us(other);
+            }
+
+            constexpr Duration operator-(const Duration &other) const noexcept
+            {
+                return {this->us - other.us};
+            };
         };
 
         constexpr Duration ZERO{0};
@@ -97,10 +128,9 @@ namespace Omega
             Duration update_period;
             Duration delay;
             std::function<void(void)> on_start;
-            std::function<void(void)> on_update;
+            std::function<void(const ::Omega::Chrono::Duration &)> on_update;
             std::function<void(void)> on_end;
             State state{State::eIDLE};
-            TimerHandle_t handle{0};
 
             Base(Type in_type = Type::eSINGLE_SHOT, Duration in_duration = {0}, Duration in_update_period = {0}, Duration in_delay = {0})
                 : type(in_type), duration(in_duration), update_period(in_update_period), delay(in_delay) {}
@@ -111,9 +141,10 @@ namespace Omega
             virtual inline void set_update_period(Duration in_update_period) noexcept = 0;
             virtual inline void set_delay(Duration in_delay) noexcept = 0;
             virtual inline void add_on_start_callback(std::function<void(void)> in_callback) = 0;
-            virtual inline void add_on_update_callback(std::function<void(void)> in_callback) noexcept = 0;
+            virtual inline void add_on_update_callback(std::function<void(const ::Omega::Chrono::Duration &)> in_callback) noexcept = 0;
             virtual inline void add_on_end_callback(std::function<void(void)> in_callback) noexcept = 0;
             virtual OmegaStatus start() noexcept = 0;
+            virtual OmegaStatus start_immediate() noexcept = 0;
             virtual OmegaStatus pause() noexcept = 0;
             virtual OmegaStatus resume() noexcept = 0;
             virtual OmegaStatus stop() noexcept = 0;
@@ -124,7 +155,7 @@ namespace Omega
             virtual inline Duration get_update_period() const noexcept = 0;
             virtual inline Duration get_delay() const noexcept = 0;
             virtual inline std::function<void(void)> get_start() const noexcept = 0;
-            virtual inline std::function<void(void)> get_update() const noexcept = 0;
+            virtual inline std::function<void(const ::Omega::Chrono::Duration &)> get_update() const noexcept = 0;
             virtual inline std::function<void(void)> get_end() const noexcept = 0;
         };
 
