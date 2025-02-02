@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:51:27 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Thursday, 30th January 2025 10:00:15 am
+ * Last Modified: Sunday, 2nd February 2025 9:08:25 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -45,12 +45,11 @@ namespace Omega
             inline void set_duration(Duration in_duration) noexcept override { duration = in_duration; }
             inline void set_update_period(Duration in_update_period) noexcept override { update_period = in_update_period; }
             inline void set_delay(Duration in_delay) noexcept override { delay = in_delay; }
-            inline void set_handle(TimerHandle_t in_handle) noexcept { handle = in_handle; }
             inline void add_on_start_callback(std::function<void(void)> in_callback) noexcept override { on_start = in_callback; }
             inline void add_on_update_callback(std::function<void(const ::Omega::Chrono::Duration &)> in_callback) noexcept override { on_update = in_callback; }
             inline void add_on_end_callback(std::function<void(void)> in_callback) noexcept override { on_end = in_callback; }
             OmegaStatus start() noexcept override;
-            OmegaStatus start_immediate() noexcept override;
+            void start_immediate() noexcept override;
             OmegaStatus pause() noexcept override;
             OmegaStatus resume() noexcept override;
             OmegaStatus stop() noexcept override;

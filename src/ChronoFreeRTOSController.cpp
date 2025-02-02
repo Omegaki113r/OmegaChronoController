@@ -80,7 +80,7 @@ namespace Omega
             handle = nullptr;
         }
 
-        OmegaStatus FreeRTOS::start_immediate() noexcept
+        void FreeRTOS::start_immediate() noexcept
         {
             const auto on_period_elapsed_handler = [](TimerHandle_t handle)
             {
@@ -111,14 +111,14 @@ namespace Omega
             };
             if (0 >= pdMS_TO_TICKS(update_period.ms))
             {
-                LOGE("Invalid duration: %ld ms | %ld ticks", update_period.ms, pdMS_TO_TICKS(update_period.ms));
-                return eFAILED;
+                        LOGE("Invalid duration: %ld ms | %ld ticks", controller->update_period.ms, pdMS_TO_TICKS(controller->update_period.ms));
+                        break;
             }
             handle = xTimerCreate("timer", pdMS_TO_TICKS(update_period.ms), pdTRUE, this, on_period_elapsed_handler);
             if (nullptr == handle)
             {
                 LOGE("xTimerCreate failed");
-                return eFAILED;
+                        break;
             }
                     controller->set_handle(handle);
                     const auto on_delay_expired_handler = [](TimerHandle_t handle)
@@ -164,8 +164,8 @@ namespace Omega
                 vTaskDelete(nullptr);
             };
             if (const auto err = xTaskCreate(immediate_task, "immediate_task", configMINIMAL_STACK_SIZE * 2, this, configMAX_PRIORITIES - 2, nullptr); pdPASS != err)
-                return eSUCCESS;
-            return eFAILED;
+                return;
+            return;
         }
 
         OmegaStatus FreeRTOS::start() noexcept

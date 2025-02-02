@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:14:46 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Thursday, 30th January 2025 9:59:18 am
+ * Last Modified: Sunday, 2nd February 2025 9:08:41 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -144,7 +144,7 @@ namespace Omega
             virtual inline void add_on_update_callback(std::function<void(const ::Omega::Chrono::Duration &)> in_callback) noexcept = 0;
             virtual inline void add_on_end_callback(std::function<void(void)> in_callback) noexcept = 0;
             virtual OmegaStatus start() noexcept = 0;
-            virtual OmegaStatus start_immediate() noexcept = 0;
+            virtual void start_immediate() noexcept = 0;
             virtual OmegaStatus pause() noexcept = 0;
             virtual OmegaStatus resume() noexcept = 0;
             virtual OmegaStatus stop() noexcept = 0;
