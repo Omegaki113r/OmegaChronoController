@@ -120,11 +120,7 @@ namespace Omega
                 LOGE("xTimerCreate failed");
                 return eFAILED;
             }
-            const auto immediate_task = [](void *arg)
-            {
-                auto controller = (FreeRTOS *)arg;
-                do
-                {
+                    controller->set_handle(handle);
                     const auto on_delay_expired_handler = [](TimerHandle_t handle)
                     {
                         const auto delay_expire_semaphore = (SemaphoreHandle_t *)pvTimerGetTimerID(handle);

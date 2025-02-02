@@ -72,6 +72,8 @@ namespace Omega
 
         private:
             TimerHandle_t handle{0};
+
+            inline void set_handle(const TimerHandle_t in_timer_handle) noexcept { handle = in_timer_handle; };
         };
     } // namespace Chrono
 } // namespace Omega
