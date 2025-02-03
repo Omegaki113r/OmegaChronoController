@@ -10,7 +10,7 @@
  * File Created: Sunday, 19th January 2025 12:42:20 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 4th February 2025 1:07:21 am
+ * Last Modified: Tuesday, 4th February 2025 1:17:59 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -41,8 +41,8 @@ extern "C" void app_main(void)
         { OMEGA_LOGI("end"); };
 
         singleshot.set_name("Count Down");
-        singleshot.set_delay(::Omega::Chrono::Duration(0, 0, 10));
-        singleshot.set_duration(::Omega::Chrono::Duration(0, 2));
+        singleshot.set_delay(::Omega::Chrono::Duration(0, 0, 1));
+        singleshot.set_duration(::Omega::Chrono::Duration(0, 37));
         singleshot.set_update_period(::Omega::Chrono::Duration(0, 0, 1));
         singleshot.add_on_start_callback(on_start);
         singleshot.add_on_update_callback(on_update);

@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:51:41 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 4th February 2025 1:06:23 am
+ * Last Modified: Tuesday, 4th February 2025 1:21:07 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -88,12 +88,12 @@ namespace Omega
 
         void FreeRTOS::start_immediate(const Duration &delay, const Duration &update_period, const Duration &duration, std::function<void(void)> start_handler, std::function<void(const ::Omega::Chrono::Duration &)> update_handler, std::function<void(void)> end_handler) noexcept
         {
-            this->on_start = start_handler;
-            this->on_update = update_handler;
-            this->on_end = end_handler;
             this->delay = delay;
             this->update_period = update_period;
             this->duration = duration;
+            this->on_start = start_handler;
+            this->on_update = update_handler;
+            this->on_end = end_handler;
             const auto immediate_task = [](void *arg)
             {
                 auto controller = (FreeRTOS *)arg;
@@ -194,12 +194,12 @@ namespace Omega
 
         OmegaStatus FreeRTOS::start(const Duration &delay, const Duration &update_period, const Duration &duration, std::function<void(void)> start_handler, std::function<void(const ::Omega::Chrono::Duration &)> update_handler, std::function<void(void)> end_handler) noexcept
         {
-            this->on_start = start_handler;
-            this->on_update = update_handler;
-            this->on_end = end_handler;
             this->delay = delay;
             this->update_period = update_period;
             this->duration = duration;
+            this->on_start = start_handler;
+            this->on_update = update_handler;
+            this->on_end = end_handler;
             const auto on_delay_expired_handler = [](TimerHandle_t handle)
             {
                 const auto delay_expire_semaphore = (SemaphoreHandle_t *)pvTimerGetTimerID(handle);

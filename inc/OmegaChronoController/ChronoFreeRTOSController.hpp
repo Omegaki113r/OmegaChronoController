@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:51:27 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 4th February 2025 1:03:47 am
+ * Last Modified: Tuesday, 4th February 2025 1:21:55 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -35,15 +35,15 @@ namespace Omega
             FreeRTOS() {}
             ~FreeRTOS();
 
-            OmegaStatus start() noexcept override;
-            OmegaStatus start(const Duration &delay, const Duration &update_period, const Duration &duration,
-                              std::function<void(void)>, std::function<void(const ::Omega::Chrono::Duration &)>, std::function<void(void)>) noexcept override;
-            void start_immediate() noexcept override;
-            void start_immediate(const Duration &delay, const Duration &update_period, const Duration &duration,
-                                 std::function<void(void)>, std::function<void(const ::Omega::Chrono::Duration &)>, std::function<void(void)>) noexcept override;
-            OmegaStatus pause() noexcept override;
-            OmegaStatus resume() noexcept override;
-            OmegaStatus stop() noexcept override;
+            // OmegaStatus start() noexcept override;
+            // OmegaStatus start(const Duration &delay, const Duration &update_period, const Duration &duration,
+            //                   std::function<void(void)>, std::function<void(const ::Omega::Chrono::Duration &)>, std::function<void(void)>) noexcept override;
+            // void start_immediate() noexcept override;
+            // void start_immediate(const Duration &delay, const Duration &update_period, const Duration &duration,
+            //                      std::function<void(void)>, std::function<void(const ::Omega::Chrono::Duration &)>, std::function<void(void)>) noexcept override;
+            // OmegaStatus pause() noexcept override;
+            // OmegaStatus resume() noexcept override;
+            // OmegaStatus stop() noexcept override;
 
             void set_handle(TimerHandle_t timer_handle) noexcept { handle = timer_handle; }
 
