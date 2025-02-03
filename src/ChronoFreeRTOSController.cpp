@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:51:41 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 4th February 2025 12:24:58 am
+ * Last Modified: Tuesday, 4th February 2025 1:06:23 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -79,6 +79,11 @@ namespace Omega
                 xTimerDelete(handle, portMAX_DELAY);
             }
             handle = nullptr;
+        }
+
+        void FreeRTOS::start_immediate() noexcept
+        {
+            start_immediate(delay, update_period, duration, on_start, on_update, on_end);
         }
 
         void FreeRTOS::start_immediate(const Duration &delay, const Duration &update_period, const Duration &duration, std::function<void(void)> start_handler, std::function<void(const ::Omega::Chrono::Duration &)> update_handler, std::function<void(void)> end_handler) noexcept
@@ -180,6 +185,11 @@ namespace Omega
             if (const auto err = xTaskCreate(immediate_task, "immediate_task", configMINIMAL_STACK_SIZE * 2, this, configMAX_PRIORITIES - 2, nullptr); pdPASS != err)
                 return;
             return;
+        }
+
+        OmegaStatus FreeRTOS::start() noexcept
+        {
+            return start(delay, update_period, duration, on_start, on_update, on_end);
         }
 
         OmegaStatus FreeRTOS::start(const Duration &delay, const Duration &update_period, const Duration &duration, std::function<void(void)> start_handler, std::function<void(const ::Omega::Chrono::Duration &)> update_handler, std::function<void(void)> end_handler) noexcept

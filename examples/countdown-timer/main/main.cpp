@@ -10,7 +10,7 @@
  * File Created: Sunday, 19th January 2025 12:42:20 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 4th February 2025 12:17:21 am
+ * Last Modified: Tuesday, 4th February 2025 1:07:21 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -22,13 +22,12 @@
 
 #include <cstdio>
 
-#include "OmegaChronoController/ChronoController.hpp"
+// #include "OmegaChronoController/ChronoController.hpp"
 #include "OmegaChronoController/ChronoFreeRTOSController.hpp"
+#include "OmegaChronoController/ChronoSingleshotController.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
-// ::Omega::Chrono::FreeRTOS countdown;
-
-auto countdown = Omega::Chrono::Controller<::Omega::Chrono::FreeRTOS>(::Omega::Chrono::Singleshot(), ::Omega::Chrono::FreeRTOS());
+auto singleshot = ::Omega::Chrono::Singleshot(::Omega::Chrono::FreeRTOS());
 
 extern "C" void app_main(void)
 {
@@ -41,15 +40,15 @@ extern "C" void app_main(void)
         const auto on_end = [&]()
         { OMEGA_LOGI("end"); };
 
-        countdown.set_name("Count Down");
-        countdown.set_delay(::Omega::Chrono::Duration(0, 0, 10));
-        countdown.set_duration(::Omega::Chrono::Duration(0, 2));
-        countdown.set_update_period(::Omega::Chrono::Duration(0, 0, 1));
-        countdown.add_on_start_callback(on_start);
-        countdown.add_on_update_callback(on_update);
-        countdown.add_on_end_callback(on_end);
-        countdown.start_immediate();
-        // countdown.start();
+        singleshot.set_name("Count Down");
+        singleshot.set_delay(::Omega::Chrono::Duration(0, 0, 10));
+        singleshot.set_duration(::Omega::Chrono::Duration(0, 2));
+        singleshot.set_update_period(::Omega::Chrono::Duration(0, 0, 1));
+        singleshot.add_on_start_callback(on_start);
+        singleshot.add_on_update_callback(on_update);
+        singleshot.add_on_end_callback(on_end);
+        singleshot.start_immediate();
+        // singleshot.start();
 
         // delay(15 * 1000);
     }

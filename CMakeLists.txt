@@ -1,7 +1,6 @@
 set(PROJ_SOURCES    
                     src/ChronoBaseController.cpp
                     src/ChronoCore.cpp
-                    src/ChronoController.cpp
                     # src/ChronoCountdownController.cpp
                     # src/ChronoCountupController.cpp
                     src/ChronoFreeRTOSController.cpp
