@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:51:41 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Sunday, 2nd February 2025 8:50:02 pm
+ * Last Modified: Tuesday, 4th February 2025 12:24:58 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -21,8 +21,13 @@
  */
 #pragma once
 
-#include "OmegaChronoController/ChronoFreeRTOSController.hpp"
+#include <cstring>
+
+#include "FreeRTOS/FreeRTOS.h"
+#include "FreeRTOS/timers.h"
+
 #include "OmegaChronoController/ChronoBaseController.hpp"
+#include "OmegaChronoController/ChronoFreeRTOSController.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
 #include <sdkconfig.h>
@@ -61,6 +66,8 @@ namespace Omega
 {
     namespace Chrono
     {
+        constexpr inline TickType_t get_ticks(const Duration &in_duration) { return pdMS_TO_TICKS(in_duration.get_in_msecs()); }
+
         FreeRTOS::~FreeRTOS()
         {
             if (handle)
@@ -71,62 +78,68 @@ namespace Omega
                 }
                 xTimerDelete(handle, portMAX_DELAY);
             }
-            duration = 0;
-            update_period = 0;
-            delay = 0;
-            on_start = nullptr;
-            on_update = nullptr;
-            on_end = nullptr;
             handle = nullptr;
         }
 
-        void FreeRTOS::start_immediate() noexcept
+        void FreeRTOS::start_immediate(const Duration &delay, const Duration &update_period, const Duration &duration, std::function<void(void)> start_handler, std::function<void(const ::Omega::Chrono::Duration &)> update_handler, std::function<void(void)> end_handler) noexcept
         {
-            const auto on_period_elapsed_handler = [](TimerHandle_t handle)
+            this->on_start = start_handler;
+            this->on_update = update_handler;
+            this->on_end = end_handler;
+            this->delay = delay;
+            this->update_period = update_period;
+            this->duration = duration;
+            const auto immediate_task = [](void *arg)
             {
-                auto controller = (FreeRTOS *)pvTimerGetTimerID(handle);
-                Duration remaining_time = ZERO;
-                const auto duration = controller->get_duration();
-                const auto elapsed_duration = controller->get_update_period();
-                if (duration > elapsed_duration)
+                auto controller = (FreeRTOS *)arg;
+                do
                 {
-                    remaining_time = duration - elapsed_duration;
-                    controller->set_duration(remaining_time);
-                }
-                const auto on_update = controller->get_update();
-                if (on_update)
-                    on_update(remaining_time);
-                if (ZERO >= remaining_time)
-                {
-                    if (const auto err = xTimerStop(controller->get_handle(), 0); pdPASS != err)
+                    const auto on_period_elapsed_handler = [](TimerHandle_t handle)
                     {
-                        LOGE("xTimerStop failed");
-                        return;
+                        auto controller = (FreeRTOS *)pvTimerGetTimerID(handle);
+                        Duration remaining_time = ZERO;
+                        const auto duration = controller->duration;
+                        const auto elapsed_duration = controller->update_period;
+                        if (duration > elapsed_duration)
+                        {
+                            remaining_time = duration - elapsed_duration;
+                            controller->duration = remaining_time;
+                        }
+                        const auto on_update = controller->on_update;
+                        if (on_update)
+                            on_update(remaining_time);
+                        if (ZERO >= remaining_time)
+                        {
+                            if (const auto err = xTimerStop(controller->handle, 0); pdPASS != err)
+                            {
+                                LOGE("xTimerStop failed");
+                                return;
+                            }
+                            const auto on_end = controller->on_end;
+                            if (on_end)
+                                on_end();
+                            return;
+                        }
+                    };
+                    if (0 >= get_ticks(controller->update_period))
+                    {
+                        LOGE("Invalid duration: %d ms | %ld ticks", controller->update_period.ms, pdMS_TO_TICKS(controller->update_period.ms));
+                        break;
                     }
-                    const auto on_end = controller->get_end();
-                    if (on_end)
-                        on_end();
-                    return;
-                }
-            };
-            if (0 >= pdMS_TO_TICKS(update_period.ms))
-            {
-                        LOGE("Invalid duration: %ld ms | %ld ticks", controller->update_period.ms, pdMS_TO_TICKS(controller->update_period.ms));
+                    const auto handle = xTimerCreate("timer", pdMS_TO_TICKS(controller->update_period.get_in_msecs()), pdTRUE, controller, on_period_elapsed_handler);
+                    if (nullptr == handle)
+                    {
+                        LOGE("xTimerCreate failed");
                         break;
-            }
-            handle = xTimerCreate("timer", pdMS_TO_TICKS(update_period.ms), pdTRUE, this, on_period_elapsed_handler);
-            if (nullptr == handle)
-            {
-                LOGE("xTimerCreate failed");
-                        break;
-            }
+                    }
                     controller->set_handle(handle);
                     const auto on_delay_expired_handler = [](TimerHandle_t handle)
                     {
                         const auto delay_expire_semaphore = (SemaphoreHandle_t *)pvTimerGetTimerID(handle);
                         xSemaphoreGive(*delay_expire_semaphore);
                     };
-                    if (0 <= pdMS_TO_TICKS(controller->get_delay().ms))
+                    const auto delay = controller->delay;
+                    if (0 < get_ticks(delay))
                     {
                         StaticSemaphore_t semaphore_buffer;
                         auto delay_expire_semaphore = xSemaphoreCreateBinaryStatic(&semaphore_buffer);
@@ -135,7 +148,8 @@ namespace Omega
                             LOGE("Semaphore Creation failed");
                             break;
                         }
-                        const auto delay_expire_handle = xTimerCreate("timer1", pdMS_TO_TICKS(controller->get_delay().ms), pdFALSE, &delay_expire_semaphore, on_delay_expired_handler);
+                        LOGD("delay in ms: %d", delay.get_in_msecs());
+                        const auto delay_expire_handle = xTimerCreate("timer1", pdMS_TO_TICKS(delay.get_in_msecs()), pdFALSE, &delay_expire_semaphore, on_delay_expired_handler);
                         if (!delay_expire_handle)
                         {
                             LOGE("Delay timer creation failed");
@@ -148,16 +162,16 @@ namespace Omega
                         }
                         xSemaphoreTake(delay_expire_semaphore, portMAX_DELAY);
                     }
-                    const auto timer_handle = controller->get_handle();
+                    const auto timer_handle = controller->handle;
                     if (nullptr == timer_handle)
                         break;
-                    if (const auto err = xTimerStart(controller->get_handle(), portMAX_DELAY); pdPASS != err)
+                    if (const auto err = xTimerStart(controller->handle, portMAX_DELAY); pdPASS != err)
                     {
                         LOGE("xTimerStart failed");
                         break;
                     }
-                    LOGD("[%s] => [Started]", controller->get_name());
-                    const auto on_start = controller->get_start();
+                    LOGD("[Started]");
+                    const auto on_start = controller->on_start;
                     if (on_start)
                         on_start();
                 } while (0);
@@ -168,8 +182,14 @@ namespace Omega
             return;
         }
 
-        OmegaStatus FreeRTOS::start() noexcept
+        OmegaStatus FreeRTOS::start(const Duration &delay, const Duration &update_period, const Duration &duration, std::function<void(void)> start_handler, std::function<void(const ::Omega::Chrono::Duration &)> update_handler, std::function<void(void)> end_handler) noexcept
         {
+            this->on_start = start_handler;
+            this->on_update = update_handler;
+            this->on_end = end_handler;
+            this->delay = delay;
+            this->update_period = update_period;
+            this->duration = duration;
             const auto on_delay_expired_handler = [](TimerHandle_t handle)
             {
                 const auto delay_expire_semaphore = (SemaphoreHandle_t *)pvTimerGetTimerID(handle);
@@ -179,41 +199,41 @@ namespace Omega
             {
                 auto controller = (FreeRTOS *)pvTimerGetTimerID(handle);
                 Duration remaining_time = ZERO;
-                const auto duration = controller->get_duration();
-                const auto elapsed_duration = controller->get_update_period();
+                const auto duration = controller->duration;
+                const auto elapsed_duration = controller->update_period;
                 if (duration > elapsed_duration)
                 {
                     remaining_time = duration - elapsed_duration;
-                    controller->set_duration(remaining_time);
+                    controller->duration = remaining_time;
                 }
-                const auto on_update = controller->get_update();
+                const auto on_update = controller->on_update;
                 if (on_update)
                     on_update(remaining_time);
                 if (ZERO >= remaining_time)
                 {
-                    if (const auto err = xTimerStop(controller->get_handle(), 0); pdPASS != err)
+                    if (const auto err = xTimerStop(controller->handle, 0); pdPASS != err)
                     {
                         LOGE("xTimerStop failed");
                         return;
                     }
-                    const auto on_end = controller->get_end();
+                    const auto on_end = controller->on_end;
                     if (on_end)
                         on_end();
                     return;
                 }
             };
-            if (0 >= pdMS_TO_TICKS(update_period.ms))
+            if (0 >= get_ticks(update_period))
             {
-                LOGE("Invalid duration: %ld ms | %ld ticks", update_period.ms, pdMS_TO_TICKS(update_period.ms));
+                LOGE("Invalid duration: %d ms | %ld ticks", update_period.ms, get_ticks(update_period));
                 return eFAILED;
             }
-            handle = xTimerCreate("timer", pdMS_TO_TICKS(update_period.ms), pdTRUE, this, on_period_elapsed_handler);
+            handle = xTimerCreate("timer", pdMS_TO_TICKS(update_period.get_in_msecs()), pdTRUE, this, on_period_elapsed_handler);
             if (nullptr == handle)
             {
                 LOGE("xTimerCreate failed");
                 return eFAILED;
             }
-            if (0 <= pdMS_TO_TICKS(delay.ms))
+            if (0 < get_ticks(delay))
             {
                 StaticSemaphore_t semaphore_buffer;
                 auto delay_expire_semaphore = xSemaphoreCreateBinaryStatic(&semaphore_buffer);
@@ -222,7 +242,8 @@ namespace Omega
                     LOGE("Semaphore Creation failed");
                     return eFAILED;
                 }
-                const auto delay_expire_handle = xTimerCreate("timer1", pdMS_TO_TICKS(delay.ms), pdFALSE, &delay_expire_semaphore, on_delay_expired_handler);
+                LOGD("[Delay Started] | %d", delay.get_in_msecs());
+                const auto delay_expire_handle = xTimerCreate("timer1", pdMS_TO_TICKS(delay.get_in_msecs()), pdFALSE, &delay_expire_semaphore, on_delay_expired_handler);
                 if (!delay_expire_handle)
                 {
                     LOGE("Delay timer creation failed");
@@ -234,13 +255,14 @@ namespace Omega
                     return eFAILED;
                 }
                 xSemaphoreTake(delay_expire_semaphore, portMAX_DELAY);
+                LOGD("[Delay Ended]");
             }
             if (const auto err = xTimerStart(handle, portMAX_DELAY); pdPASS != err)
             {
                 LOGE("xTimerStart failed");
                 return eFAILED;
             }
-            LOGD("[%s] => [Started]", get_name());
+            LOGD("[Started]");
             if (on_start)
                 on_start();
             return eSUCCESS;

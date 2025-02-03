@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:51:27 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Sunday, 2nd February 2025 9:08:25 pm
+ * Last Modified: Tuesday, 4th February 2025 12:24:42 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -22,57 +22,31 @@
 #pragma once
 
 #include "OmegaChronoController/ChronoBaseController.hpp"
+#include "OmegaChronoController/ChronoCore.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
 namespace Omega
 {
     namespace Chrono
     {
-        class FreeRTOS : public Base
+        class FreeRTOS : public Core
         {
         public:
-            FreeRTOS(Type in_type = Type::eSINGLE_SHOT, Duration in_duration = {0}, Duration in_update_period = {0}, Duration in_delay = {0})
-                : Base(in_type, in_duration, in_update_period, in_delay) {}
+            FreeRTOS() {}
             ~FreeRTOS();
 
-            inline void set_name(const char *in_name) override
-            {
-                if (nullptr == in_name || 0 == std::strlen(in_name))
-                    return;
-                UNUSED(std::memcpy(name, in_name, OMEGA_MIN(std::strlen(in_name), sizeof(name))));
-            }
-            inline void set_type(Type in_type) noexcept override { type = in_type; }
-            inline void set_duration(Duration in_duration) noexcept override { duration = in_duration; }
-            inline void set_update_period(Duration in_update_period) noexcept override { update_period = in_update_period; }
-            inline void set_delay(Duration in_delay) noexcept override { delay = in_delay; }
-            inline void add_on_start_callback(std::function<void(void)> in_callback) noexcept override { on_start = in_callback; }
-            inline void add_on_update_callback(std::function<void(const ::Omega::Chrono::Duration &)> in_callback) noexcept override { on_update = in_callback; }
-            inline void add_on_end_callback(std::function<void(void)> in_callback) noexcept override { on_end = in_callback; }
-            OmegaStatus start() noexcept override;
-            void start_immediate() noexcept override;
+            OmegaStatus start(const Duration &delay, const Duration &update_period, const Duration &duration,
+                              std::function<void(void)>, std::function<void(const ::Omega::Chrono::Duration &)>, std::function<void(void)>) noexcept override;
+            void start_immediate(const Duration &delay, const Duration &update_period, const Duration &duration,
+                                 std::function<void(void)>, std::function<void(const ::Omega::Chrono::Duration &)>, std::function<void(void)>) noexcept override;
             OmegaStatus pause() noexcept override;
             OmegaStatus resume() noexcept override;
             OmegaStatus stop() noexcept override;
 
-            inline const char *get_name() const noexcept override { return name; }
-            inline Type get_type() const noexcept override { return type; }
-            inline Duration get_duration() const noexcept override { return duration; }
-            inline Duration get_update_period() const noexcept override { return update_period; }
-            inline Duration get_delay() const noexcept override { return delay; }
-            inline std::function<void(void)> get_start() const noexcept override { return on_start; }
-            inline std::function<void(const ::Omega::Chrono::Duration &)> get_update() const noexcept override { return on_update; }
-            inline std::function<void(void)> get_end() const noexcept override { return on_end; }
-            inline TimerHandle_t get_handle() const noexcept { return handle; };
-
-            FreeRTOS(FreeRTOS &other) = delete;
-            FreeRTOS &operator=(FreeRTOS &) = delete;
-            FreeRTOS(FreeRTOS &&) = delete;
-            FreeRTOS &operator=(FreeRTOS &&) = delete;
+            void set_handle(TimerHandle_t timer_handle) noexcept { handle = timer_handle; }
 
         private:
             TimerHandle_t handle{0};
-
-            inline void set_handle(const TimerHandle_t in_timer_handle) noexcept { handle = in_timer_handle; };
         };
     } // namespace Chrono
 } // namespace Omega

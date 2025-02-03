@@ -1,29 +1,26 @@
 /**
- * @file ChronoController.cpp
+ * @file ChronoCore.cpp
  * @author Omegaki113r
- * @date Monday, 27th January 2025 8:22:29 am
- * @copyright Copyright 2025 - 2025 0m3g4ki113r, Xtronic
+ * @date Monday, 3rd February 2025 7:51:39 pm
+ * @copyright Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
  * */
 /*
  * Project: src
- * File Name: ChronoController.cpp
- * File Created: Monday, 27th January 2025 8:22:29 am
+ * File Name: ChronoCore.cpp
+ * File Created: Monday, 3rd February 2025 7:51:39 pm
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Monday, 3rd February 2025 10:28:44 pm
+ * Last Modified: Monday, 3rd February 2025 10:11:16 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
+ * Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
  */
 
-#include <freertos/FreeRTOS.h>
-#include <freertos/timers.h>
-
-#include "OmegaChronoController/ChronoController.hpp"
+#include "OmegaChronoController/ChronoCore.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
 #include <sdkconfig.h>
@@ -63,8 +60,36 @@ namespace Omega
 {
     namespace Chrono
     {
+        // void Core::start_immediate() noexcept
+        // {
+        // }
+
+        // OmegaStatus Core::start() noexcept
+        // {
+        //     return eFAILED;
+        // }
+
+        // OmegaStatus Core::pause() noexcept
+        // {
+        //     LOGE("Unimplemented");
+        //     assert(0);
+        //     return eFAILED;
+        // }
+
+        // OmegaStatus Core::resume() noexcept
+        // {
+        //     LOGE("Unimplemented");
+        //     assert(0);
+        //     return eFAILED;
+        // }
+
+        // OmegaStatus Core::stop() noexcept
+        // {
+        //     LOGE("Unimplemented");
+        //     assert(0);
+        //     return eFAILED;
+        // }
     } // namespace Chrono
 } // namespace Omega
 #else
-
 #endif
