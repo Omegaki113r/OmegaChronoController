@@ -10,7 +10,7 @@
  * File Created: Monday, 3rd February 2025 6:01:19 pm
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 4th February 2025 8:58:42 pm
+ * Last Modified: Wednesday, 5th February 2025 12:40:09 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -34,7 +34,7 @@ namespace Omega
             std::function<void(const Duration &)> m_on_update;
             std::function<void(void)> m_on_end;
 
-            virtual OmegaStatus start(Duration update_period, Duration duration) noexcept = 0;
+            virtual OmegaStatus start(Duration update_period, Duration duration, std::function<void(const Duration &)> update_callback) noexcept = 0;
 
         public:
             inline void add_on_start_callback(std::function<void(void)> in_callback) { m_on_start = in_callback; }

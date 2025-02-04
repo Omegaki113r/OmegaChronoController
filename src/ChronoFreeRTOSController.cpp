@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:51:41 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 4th February 2025 9:02:10 pm
+ * Last Modified: Wednesday, 5th February 2025 12:50:24 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -82,17 +82,37 @@ namespace Omega
             handle = nullptr;
         }
 
-        OmegaStatus FreeRTOS::start(Duration update_period, Duration in_duration) noexcept
+        OmegaStatus FreeRTOS::start(Duration in_update_period, Duration in_duration, std::function<void(const Duration &)> in_update_callback) noexcept
         {
+            struct Data
+            {
+                const SemaphoreHandle_t semaphore;
+                const Duration &update_period;
+                Duration &duration;
+                const std::function<void(const Duration &)> on_update;
+            };
             if (0 >= get_ticks(in_duration))
             {
                 LOGE("Invalid duration: %d ms | %ld ticks", in_duration.ms, get_ticks(in_duration));
                 return eFAILED;
             }
+            if (0 >= get_ticks(in_update_period))
+            {
+                LOGE("Invalid duration: %d ms | %ld ticks", in_update_period.ms, get_ticks(in_update_period));
+                return eFAILED;
+            }
+
             const auto on_duration_expired_handler = [](TimerHandle_t handle)
             {
-                const auto duration_expire_semaphore = (SemaphoreHandle_t *)pvTimerGetTimerID(handle);
-                xSemaphoreGive(*duration_expire_semaphore);
+                const auto data = (Data *)pvTimerGetTimerID(handle);
+                if (data->duration > 0)
+                {
+                    data->duration = data->duration - data->update_period;
+                }
+                if (data->on_update)
+                    data->on_update(data->duration);
+                if (data->semaphore)
+                    xSemaphoreGive(data->semaphore);
             };
             StaticSemaphore_t semaphore_buffer;
             auto duration_expire_semaphore = xSemaphoreCreateBinaryStatic(&semaphore_buffer);
@@ -101,20 +121,33 @@ namespace Omega
                 LOGE("Semaphore Creation failed");
                 return eFAILED;
             }
-            LOGD("duration in ms: %lld", in_duration.get_in_msecs());
-
-            const auto duration_expire_handle = xTimerCreate("timer1", pdMS_TO_TICKS(update_period.get_in_msecs()), update_period == in_duration ? pdFALSE : pdTRUE, &duration_expire_semaphore, on_duration_expired_handler);
-            if (!duration_expire_handle)
+            auto looping = pdFALSE;
+            const auto update_ticks = pdMS_TO_TICKS(in_update_period.get_in_msecs());
+            if (in_update_period != in_duration)
+                looping = pdTRUE;
+            Data data{duration_expire_semaphore, in_update_period, in_duration, in_update_callback};
+            handle = xTimerCreate("timer1", update_ticks, looping, &data, on_duration_expired_handler);
+            if (!handle)
             {
                 LOGE("duration timer creation failed");
                 return eFAILED;
             }
-            if (const auto err = xTimerStart(duration_expire_handle, portMAX_DELAY); pdPASS != err)
+            if (const auto err = xTimerStart(handle, portMAX_DELAY); pdPASS != err)
             {
                 LOGE("duration timer start failed");
                 return eFAILED;
             }
-            xSemaphoreTake(duration_expire_semaphore, portMAX_DELAY);
+            do
+            {
+                xSemaphoreTake(duration_expire_semaphore, portMAX_DELAY);
+            } while (looping && in_duration > 0);
+            if (const auto err = xTimerStop(handle, portMAX_DELAY); err != pdPASS)
+            {
+                LOGE("Timer stop failed");
+                return eFAILED;
+            }
+            xTimerDelete(handle, portMAX_DELAY);
+            handle = nullptr;
             return eSUCCESS;
         }
     } // namespace Chrono
