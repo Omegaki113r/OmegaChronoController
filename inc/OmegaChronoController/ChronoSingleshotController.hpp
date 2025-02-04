@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:19:29 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 4th February 2025 4:21:00 pm
+ * Last Modified: Tuesday, 4th February 2025 5:24:06 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -21,7 +21,7 @@
  */
 #pragma once
 
-#include "OmegaChronoController/ChronoBaseController.hpp"
+#include "OmegaChronoController/ChronoBase.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
 namespace Omega

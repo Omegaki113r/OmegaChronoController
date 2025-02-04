@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:14:46 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 4th February 2025 4:21:51 pm
+ * Last Modified: Tuesday, 4th February 2025 5:33:10 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -58,20 +58,15 @@ namespace Omega
             Duration delay;
             State state{State::eIDLE};
 
-            void set_name(const char *in_name)
-            {
-                if (nullptr == in_name || 0 == std::strlen(in_name))
-                    return;
-                UNUSED(std::memcpy(name, in_name, OMEGA_MIN(std::strlen(in_name), sizeof(name))));
-            }
+            void set_name(const char *in_name);
             constexpr inline void set_duration(Duration in_duration) noexcept { duration = in_duration; }
             constexpr inline void set_update_period(Duration in_update_period) noexcept { update_period = in_update_period; }
             constexpr inline void set_delay(Duration in_delay) noexcept { delay = in_delay; }
-            inline void add_on_delay_start_callback(std::function<void(void)> in_callback) { on_delay_start = in_callback; }
-            inline void add_on_delay_end_callback(std::function<void(void)> in_callback) { on_delay_end = in_callback; }
-            inline void add_on_start_callback(std::function<void(void)> in_callback) { on_start = in_callback; }
-            inline void add_on_update_callback(std::function<void(const Duration &)> in_callback) noexcept { on_update = in_callback; }
-            inline void add_on_end_callback(std::function<void(void)> in_callback) noexcept { on_end = in_callback; }
+            constexpr inline void add_on_delay_start_callback(std::function<void(void)> in_callback) { on_delay_start = in_callback; }
+            constexpr inline void add_on_delay_end_callback(std::function<void(void)> in_callback) { on_delay_end = in_callback; }
+            constexpr inline void add_on_start_callback(std::function<void(void)> in_callback) { on_start = in_callback; }
+            constexpr inline void add_on_update_callback(std::function<void(const Duration &)> in_callback) noexcept { on_update = in_callback; }
+            constexpr inline void add_on_end_callback(std::function<void(void)> in_callback) noexcept { on_end = in_callback; }
 
             constexpr inline const char *get_name() const noexcept { return name; }
             constexpr inline const std::function<void(void)> &get_on_delay_start_handler() const noexcept { return on_delay_start; }

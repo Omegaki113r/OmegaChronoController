@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:38:04 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 29th January 2025 5:04:47 am
+ * Last Modified: Tuesday, 4th February 2025 5:32:45 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -19,6 +19,10 @@
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
  */
+
+#include "OmegaChronoController/ChronoBase.hpp"
+#include "OmegaChronoController/Duration.hpp"
+#include "OmegaUtilityDriver/UtilityDriver.hpp"
 
 #include <sdkconfig.h>
 #if CONFIG_OMEGA_CHRONO_CONTROLLER_DEBUG
@@ -51,3 +55,16 @@
 #define LOGE(format, ...)
 #define HEX_LOGE(buffer, length)
 #endif
+
+namespace Omega
+{
+    namespace Chrono
+    {
+        void Base::set_name(const char *in_name)
+        {
+            if (nullptr == in_name || 0 == std::strlen(in_name))
+                return;
+            UNUSED(std::memcpy(name, in_name, OMEGA_MIN(std::strlen(in_name), sizeof(name))));
+        }
+    } // namespace Chrono
+} // namespace Omega
