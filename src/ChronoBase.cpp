@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:38:04 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 4th February 2025 5:32:45 pm
+ * Last Modified: Tuesday, 4th February 2025 8:17:48 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -64,7 +64,9 @@ namespace Omega
         {
             if (nullptr == in_name || 0 == std::strlen(in_name))
                 return;
-            UNUSED(std::memcpy(name, in_name, OMEGA_MIN(std::strlen(in_name), sizeof(name))));
+            const auto name_length = std::strlen(in_name);
+            UNUSED(std::memcpy(m_name, in_name, OMEGA_MIN(name_length, sizeof(m_name))));
+            m_name[name_length] = '\0';
         }
     } // namespace Chrono
 } // namespace Omega

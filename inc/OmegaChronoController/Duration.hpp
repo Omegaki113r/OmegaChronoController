@@ -2,7 +2,7 @@
  * @file Duration.hpp
  * @author Omegaki113r
  * @date Monday, 3rd February 2025 6:40:37 pm
- * @copyright Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
+ * @copyright Copyright 2025 - 2025 0m3g4ki113r, Xtronic
  * */
 /*
  * Project: OmegaChronoController
@@ -10,10 +10,10 @@
  * File Created: Monday, 3rd February 2025 6:40:37 pm
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 4th February 2025 3:21:52 pm
+ * Last Modified: Tuesday, 4th February 2025 8:54:45 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
+ * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -151,16 +151,16 @@ namespace Omega
                 u64 result_us = total_us - other_total_us;
 
                 // Reconstruct the Duration from the result in microseconds
-                u16 result_h = static_cast<u16>(result_us / 3600000000);
+                u64 result_h = static_cast<u64>(result_us / 3600000000);
                 result_us %= 3600000000;
 
-                u8 result_m = static_cast<u8>(result_us / 60000000);
+                u64 result_m = static_cast<u64>(result_us / 60000000);
                 result_us %= 60000000;
 
-                u8 result_s = static_cast<u8>(result_us / 1000000);
+                u64 result_s = static_cast<u64>(result_us / 1000000);
                 result_us %= 1000000;
 
-                u16 result_ms = static_cast<u16>(result_us / 1000);
+                u64 result_ms = static_cast<u64>(result_us / 1000);
                 result_us %= 1000;
 
                 u64 result_us_remaining = result_us; // Remaining microseconds
@@ -173,11 +173,11 @@ namespace Omega
                 return {0, 0, 0, 0, in_time_us};
             }
 
-            constexpr u16 get_in_hours() const noexcept
+            constexpr u64 get_in_hours() const noexcept
             {
                 return h + (m / 60) + (s / (60 * 60)) + (ms / (60 * 60 * 1000)) + (us / (60 * 60 * 1000 * 1000));
             }
-            constexpr u16 get_in_msecs() const noexcept
+            constexpr u64 get_in_msecs() const noexcept
             {
                 return (h * 60 * 60 * 1000) + (m * 60 * 1000) + (s * 1000) + ms + (us / 1000);
             }

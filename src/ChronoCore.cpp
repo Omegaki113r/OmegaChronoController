@@ -2,7 +2,7 @@
  * @file ChronoCore.cpp
  * @author Omegaki113r
  * @date Monday, 3rd February 2025 7:51:39 pm
- * @copyright Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
+ * @copyright Copyright 2025 - 2025 0m3g4ki113r, Xtronic
  * */
 /*
  * Project: src
@@ -10,10 +10,10 @@
  * File Created: Monday, 3rd February 2025 7:51:39 pm
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Monday, 3rd February 2025 10:11:16 pm
+ * Last Modified: Tuesday, 4th February 2025 8:54:45 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
+ * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
  * -----
  * HISTORY:
  * Date      	By	Comments

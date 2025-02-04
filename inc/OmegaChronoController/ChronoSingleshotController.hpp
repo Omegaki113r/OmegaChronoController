@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:19:29 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 4th February 2025 5:24:06 pm
+ * Last Modified: Tuesday, 4th February 2025 8:27:13 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -36,27 +36,55 @@ namespace Omega
         public:
             constexpr Singleshot(T in_core) : core(in_core) {}
 
+            constexpr Singleshot &name(const char *in_name) noexcept override
+            {
+                set_name(in_name);
+                return *this;
+            }
+
+            constexpr Singleshot &delay(Duration in_delay) noexcept override
+            {
+                set_delay(in_delay);
+                return *this;
+            }
+
+            constexpr Singleshot &update_duration(Duration in_update_period) noexcept override
+            {
+                set_update_period(in_update_period);
+                return *this;
+            }
+
+            constexpr Singleshot &duration(Duration in_duration) noexcept override
+            {
+                set_duration(in_duration);
+                return *this;
+            }
+
             OmegaStatus start() noexcept override
             {
                 const auto timer_task = [](void *arg)
                 {
                     Singleshot *controller = (Singleshot *)arg;
-                    if (Duration{0} < controller->delay)
+                    if (Duration{0} < controller->m_delay)
                     {
                         const auto on_delay_start = controller->get_on_delay_start_handler();
                         if (on_delay_start)
                             on_delay_start();
-                        controller->core.start(controller->delay, controller->delay);
+                        OMEGA_LOGD("[%s] => %.2d:%.2d:%.2d.%.3d.%.3lld", controller->m_name,
+                                   controller->m_delay.h, controller->m_delay.m, controller->m_delay.s, controller->m_delay.ms, controller->m_delay.us);
+                        controller->core.start(controller->m_delay, controller->m_delay);
                         const auto on_delay_end = controller->get_on_delay_end_handler();
                         if (on_delay_end)
                             on_delay_end();
                     }
-                    if (Duration(0) < controller->duration)
+                    if (Duration(0) < controller->m_duration)
                     {
                         const auto on_start = controller->get_on_start_handler();
                         if (on_start)
                             on_start();
-                        controller->core.start(controller->duration, controller->duration);
+                        OMEGA_LOGD("[%s] => %.2d:%.2d:%.2d.%.3d.%.3lld", controller->m_name,
+                                   controller->m_duration.h, controller->m_duration.m, controller->m_duration.s, controller->m_duration.ms, controller->m_duration.us);
+                        controller->core.start(controller->m_duration, controller->m_duration);
                         const auto on_end = controller->get_on_end_handler();
                         if (on_end)
                             on_end();
