@@ -1,11 +1,8 @@
 set(PROJ_SOURCES    
                     src/ChronoBaseController.cpp
                     src/ChronoCore.cpp
-                    # src/ChronoCountdownController.cpp
-                    # src/ChronoCountupController.cpp
+                    src/ChronoSingleshotController.cpp
                     src/ChronoFreeRTOSController.cpp
-                    # src/ChronoPeriodicController.cpp
-                    # src/ChronoSingleshotController.cpp
                 )
 
 idf_component_register( SRCS            ${PROJ_SOURCES}

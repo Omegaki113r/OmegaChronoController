@@ -10,7 +10,7 @@
  * File Created: Monday, 3rd February 2025 6:01:19 pm
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 4th February 2025 1:21:40 am
+ * Last Modified: Tuesday, 4th February 2025 3:41:40 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
@@ -30,6 +30,7 @@ namespace Omega
     {
         class Core
         {
+            virtual void start(Duration update_period, Duration duration) noexcept = 0;
         };
     } // namespace Chrono
 } // namespace Omega

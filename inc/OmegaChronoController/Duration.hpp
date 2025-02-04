@@ -10,7 +10,7 @@
  * File Created: Monday, 3rd February 2025 6:40:37 pm
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Monday, 3rd February 2025 6:41:17 pm
+ * Last Modified: Tuesday, 4th February 2025 3:21:52 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
@@ -237,7 +237,5 @@ namespace Omega
                 return *this;
             }
         };
-
-        constexpr Duration ZERO{0, 0, 0, 0, 0};
     } // namespace Chrono
 } // namespace Omega
