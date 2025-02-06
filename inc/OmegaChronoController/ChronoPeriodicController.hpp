@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:20:06 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Thursday, 6th February 2025 10:20:29 pm
+ * Last Modified: Thursday, 6th February 2025 10:52:18 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -111,8 +111,15 @@ namespace Omega
                                 on_update_handler(controller->m_name, controller->elapsed_duration);
                             return false;
                         };
+                        const auto on_end = [&](const char *name)
+                        {
+                            const auto on_stop_handler = controller->get_on_stop_handler();
+                            if (on_stop_handler)
+                                on_stop_handler(controller->m_name);
+                        };
                         controller->core.add_on_start_callback(on_start);
                         controller->core.add_on_update_callback(on_update);
+                        controller->core.add_on_stop_callback(on_end);
                         controller->core.start(controller->m_update_period, controller->m_duration);
                     }
                     vTaskDelete(nullptr);
@@ -141,8 +148,6 @@ namespace Omega
             OmegaStatus stop() noexcept override
             {
                 const auto state = core.stop();
-                if (m_on_stopped)
-                    m_on_stopped(m_name);
                 return state;
             }
         };

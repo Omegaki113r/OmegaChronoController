@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:19:29 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Thursday, 6th February 2025 10:20:37 pm
+ * Last Modified: Thursday, 6th February 2025 10:52:27 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -135,8 +135,6 @@ namespace Omega
             OmegaStatus stop() noexcept override
             {
                 const auto state = core.stop();
-                if (m_on_stopped)
-                    m_on_stopped(m_name);
                 return state;
             }
         };
