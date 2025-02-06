@@ -10,7 +10,7 @@
  * File Created: Sunday, 19th January 2025 12:42:20 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Thursday, 6th February 2025 10:46:19 pm
+ * Last Modified: Thursday, 6th February 2025 11:13:07 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -23,6 +23,7 @@
 #include <cstdio>
 
 #include "OmegaChronoController/ChronoCountdownController.hpp"
+#include "OmegaChronoController/ChronoCountupController.hpp"
 #include "OmegaChronoController/ChronoFreeRTOSController.hpp"
 #include "OmegaChronoController/ChronoPeriodicController.hpp"
 #include "OmegaChronoController/ChronoSingleshotController.hpp"
@@ -43,6 +44,12 @@ auto countdown = ::Omega::Chrono::Countdown(::Omega::Chrono::FreeRTOS())
                      .delay({0})
                      .update_duration({0, 0, 1})
                      .duration({0, 1});
+
+auto countup = ::Omega::Chrono::Countup(::Omega::Chrono::FreeRTOS())
+                   .name("Countup")
+                   .delay({0})
+                   .update_duration({0, 0, 1})
+                   .duration({0, 1});
 
 extern "C" void app_main(void)
 {
@@ -79,21 +86,21 @@ extern "C" void app_main(void)
         //     OMEGA_LOGE("%s start failed", periodic.get_name());
         // }
 
-        countdown.add_on_start_callback(on_start);
-        countdown.add_on_resume_callback(on_resume);
-        countdown.add_on_update_callback(on_update);
-        countdown.add_on_pause_callback(on_pause);
-        countdown.add_on_stop_callback(on_stop);
-        if (const auto err = countdown.start(); err != eSUCCESS)
+        countup.add_on_start_callback(on_start);
+        countup.add_on_resume_callback(on_resume);
+        countup.add_on_update_callback(on_update);
+        countup.add_on_pause_callback(on_pause);
+        countup.add_on_stop_callback(on_stop);
+        if (const auto err = countup.start(); err != eSUCCESS)
         {
-            OMEGA_LOGE("%s start failed", countdown.get_name());
+            OMEGA_LOGE("%s start failed", countup.get_name());
         }
 
-        // delay(5 * 1000);
-        // periodic.pause();
-        // delay(5 * 1000);
-        // periodic.resume();
-        // delay(5 * 1000);
-        // periodic.stop();
+        delay(5 * 1000);
+        countup.pause();
+        delay(5 * 1000);
+        countup.resume();
+        delay(5 * 1000);
+        countup.stop();
     }
 }
