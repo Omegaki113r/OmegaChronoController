@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:19:29 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 5th February 2025 12:43:49 am
+ * Last Modified: Thursday, 6th February 2025 10:20:37 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -22,6 +22,7 @@
 #pragma once
 
 #include "OmegaChronoController/ChronoBase.hpp"
+#include "OmegaChronoController/ChronoCallbacks.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
 namespace Omega
@@ -35,6 +36,8 @@ namespace Omega
 
         public:
             constexpr Singleshot(T in_core) : core(in_core) {}
+
+            ~Singleshot() {}
 
             constexpr Singleshot &name(const char *in_name) noexcept override
             {
@@ -62,28 +65,49 @@ namespace Omega
 
             OmegaStatus start() noexcept override
             {
+                if (Duration{0} == m_duration)
+                {
+                    OMEGA_LOGE("Invalid Duration");
+                    return eFAILED;
+                }
                 const auto timer_task = [](void *arg)
                 {
                     Singleshot *controller = (Singleshot *)arg;
                     if (Duration{0} < controller->m_delay)
                     {
-                        const auto on_delay_start = controller->get_on_delay_start_handler();
-                        if (on_delay_start)
-                            on_delay_start();
-                        controller->core.start(controller->m_delay, controller->m_delay, controller->m_on_update);
-                        const auto on_delay_end = controller->get_on_delay_end_handler();
-                        if (on_delay_end)
-                            on_delay_end();
+                        const auto on_start = [&](const char *name)
+                        {
+                            const auto on_start_handler = controller->get_on_delay_start_handler();
+                            if (on_start_handler)
+                                on_start_handler(controller->m_name);
+                        };
+                        const auto on_end = [&](const char *name)
+                        {
+                            const auto on_end_handler = controller->get_on_delay_stopped_handler();
+                            if (on_end_handler)
+                                on_end_handler(controller->m_name);
+                        };
+                        controller->core.add_on_start_callback(on_start);
+                        controller->core.add_on_stop_callback(on_end);
+                        controller->core.start(controller->m_delay, controller->m_delay);
                     }
                     if (Duration(0) < controller->m_duration)
                     {
-                        const auto on_start = controller->get_on_start_handler();
-                        if (on_start)
-                            on_start();
-                        controller->core.start(controller->m_duration, controller->m_duration, controller->m_on_update);
-                        const auto on_end = controller->get_on_end_handler();
-                        if (on_end)
-                            on_end();
+                        const auto on_start = [&](const char *name)
+                        {
+                            const auto on_start_handler = controller->get_on_start_handler();
+                            if (on_start_handler)
+                                on_start_handler(controller->m_name);
+                        };
+                        const auto on_end = [&](const char *name)
+                        {
+                            const auto on_end_handler = controller->get_on_stop_handler();
+                            if (on_end_handler)
+                                on_end_handler(controller->m_name);
+                        };
+                        controller->core.add_on_start_callback(on_start);
+                        controller->core.add_on_stop_callback(on_end);
+                        controller->core.start(controller->m_duration, controller->m_duration);
                     }
                     vTaskDelete(nullptr);
                 };
@@ -92,11 +116,29 @@ namespace Omega
                 return eSUCCESS;
             }
 
-            OmegaStatus pause() noexcept override { return eFAILED; }
+            OmegaStatus pause() noexcept override
+            {
+                const auto state = core.pause();
+                if (m_on_paused)
+                    m_on_paused(m_name);
+                return state;
+            }
 
-            OmegaStatus resume() noexcept override { return eFAILED; }
+            OmegaStatus resume() noexcept override
+            {
+                const auto state = core.resume();
+                if (m_on_resumed)
+                    m_on_resumed(m_name);
+                return state;
+            }
 
-            OmegaStatus stop() noexcept override { return eFAILED; }
+            OmegaStatus stop() noexcept override
+            {
+                const auto state = core.stop();
+                if (m_on_stopped)
+                    m_on_stopped(m_name);
+                return state;
+            }
         };
     } // namespace Chrono
 } // namespace Omega

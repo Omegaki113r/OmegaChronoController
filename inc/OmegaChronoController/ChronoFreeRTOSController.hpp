@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:51:27 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 5th February 2025 12:40:36 am
+ * Last Modified: Thursday, 6th February 2025 5:43:59 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -25,6 +25,7 @@
 #include <FreeRTOS/timers.h>
 
 #include "OmegaChronoController/ChronoBase.hpp"
+#include "OmegaChronoController/ChronoCallbacks.hpp"
 #include "OmegaChronoController/ChronoCore.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
@@ -40,7 +41,10 @@ namespace Omega
 
             void set_handle(TimerHandle_t timer_handle) noexcept { handle = timer_handle; }
 
-            OmegaStatus start(Duration update_period, Duration duration, std::function<void(const Duration &)> update_callback) noexcept override;
+            OmegaStatus start(Duration update_period, Duration duration) noexcept override;
+            OmegaStatus resume() noexcept override;
+            OmegaStatus pause() noexcept override;
+            OmegaStatus stop() noexcept override;
 
         private:
             TimerHandle_t handle{0};

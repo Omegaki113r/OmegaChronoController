@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:51:41 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 5th February 2025 12:50:24 am
+ * Last Modified: Thursday, 6th February 2025 9:52:59 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -82,14 +82,14 @@ namespace Omega
             handle = nullptr;
         }
 
-        OmegaStatus FreeRTOS::start(Duration in_update_period, Duration in_duration, std::function<void(const Duration &)> in_update_callback) noexcept
+        OmegaStatus FreeRTOS::start(Duration in_update_period, Duration in_duration) noexcept
         {
             struct Data
             {
+                const char *name;
                 const SemaphoreHandle_t semaphore;
-                const Duration &update_period;
-                Duration &duration;
-                const std::function<void(const Duration &)> on_update;
+                bool &should_end;
+                const on_update_handler on_update;
             };
             if (0 >= get_ticks(in_duration))
             {
@@ -105,12 +105,8 @@ namespace Omega
             const auto on_duration_expired_handler = [](TimerHandle_t handle)
             {
                 const auto data = (Data *)pvTimerGetTimerID(handle);
-                if (data->duration > 0)
-                {
-                    data->duration = data->duration - data->update_period;
-                }
                 if (data->on_update)
-                    data->on_update(data->duration);
+                    data->should_end = data->on_update("", {0});
                 if (data->semaphore)
                     xSemaphoreGive(data->semaphore);
             };
@@ -121,11 +117,12 @@ namespace Omega
                 LOGE("Semaphore Creation failed");
                 return eFAILED;
             }
+            auto should_end = false;
             auto looping = pdFALSE;
             const auto update_ticks = pdMS_TO_TICKS(in_update_period.get_in_msecs());
             if (in_update_period != in_duration)
                 looping = pdTRUE;
-            Data data{duration_expire_semaphore, in_update_period, in_duration, in_update_callback};
+            Data data{"", duration_expire_semaphore, should_end, get_on_update()};
             handle = xTimerCreate("timer1", update_ticks, looping, &data, on_duration_expired_handler);
             if (!handle)
             {
@@ -137,16 +134,66 @@ namespace Omega
                 LOGE("duration timer start failed");
                 return eFAILED;
             }
+            const auto on_start = get_on_start();
+            if (on_start)
+                on_start("");
             do
             {
                 xSemaphoreTake(duration_expire_semaphore, portMAX_DELAY);
-            } while (looping && in_duration > 0);
+            } while (looping && !should_end);
             if (const auto err = xTimerStop(handle, portMAX_DELAY); err != pdPASS)
             {
                 LOGE("Timer stop failed");
                 return eFAILED;
             }
             xTimerDelete(handle, portMAX_DELAY);
+            handle = nullptr;
+            const auto on_stop = get_on_stop();
+            if (on_stop)
+                on_stop("");
+            return eSUCCESS;
+        }
+
+        OmegaStatus FreeRTOS::resume() noexcept
+        {
+            if (handle)
+            {
+                if (pdFALSE == xTimerIsTimerActive(handle))
+                    xTimerStart(handle, portMAX_DELAY);
+                if (m_on_resumed)
+                    m_on_resumed("");
+                return eSUCCESS;
+            }
+            return eFAILED;
+        }
+
+        OmegaStatus FreeRTOS::pause() noexcept
+        {
+            if (handle)
+            {
+                xTimerStop(handle, portMAX_DELAY);
+                do
+                {
+                } while (xTimerIsTimerActive(handle));
+                if (m_on_paused)
+                    m_on_paused("");
+                return eSUCCESS;
+            }
+            return eFAILED;
+        }
+
+        OmegaStatus FreeRTOS::stop() noexcept
+        {
+            if (handle)
+            {
+                xTimerStop(handle, portMAX_DELAY);
+                do
+                {
+                } while (xTimerIsTimerActive(handle));
+                xTimerDelete(handle, portMAX_DELAY);
+            }
+            if (m_on_stopped)
+                m_on_stopped("");
             handle = nullptr;
             return eSUCCESS;
         }

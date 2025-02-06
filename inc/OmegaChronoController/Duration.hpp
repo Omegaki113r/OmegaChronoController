@@ -10,7 +10,7 @@
  * File Created: Monday, 3rd February 2025 6:40:37 pm
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Tuesday, 4th February 2025 9:53:33 pm
+ * Last Modified: Wednesday, 5th February 2025 3:39:45 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -105,36 +105,29 @@ namespace Omega
 
             constexpr Duration operator+(const Duration &other) const noexcept
             {
-                u64 usecs = this->us + other.us;
-                u16 msecs = this->ms - other.ms;
-                u8 secs = this->s - other.s;
-                u8 mins = this->m - other.m;
-                u16 hrs = this->h - other.h;
-                if (usecs >= 1000)
-                {
-                    usecs = usecs % 1000;
-                    u64 i = usecs / 1000;
-                    msecs += i;
-                }
-                if (msecs >= 1000)
-                {
-                    msecs = msecs % 1000;
-                    u64 i = msecs / 1000;
-                    secs += i;
-                }
-                if (secs >= 60)
-                {
-                    secs = secs % 60;
-                    u64 i = secs / 60;
-                    mins += i;
-                }
-                if (mins >= 60)
-                {
-                    mins = mins % 60;
-                    u64 i = mins / 60;
-                    hrs += i;
-                }
-                return {hrs, mins, secs, msecs, usecs};
+                // Convert both durations to microseconds
+                u64 total_us = us + ms * 1000 + s * 1000000 + m * 60000000 + h * 3600000000;
+                u64 other_total_us = other.us + other.ms * 1000 + other.s * 1000000 + other.m * 60000000 + other.h * 3600000000;
+
+                // Perform the subtraction
+                u64 result_us = total_us + other_total_us;
+
+                // Reconstruct the Duration from the result in microseconds
+                u64 result_h = static_cast<u64>(result_us / 3600000000);
+                result_us %= 3600000000;
+
+                u64 result_m = static_cast<u64>(result_us / 60000000);
+                result_us %= 60000000;
+
+                u64 result_s = static_cast<u64>(result_us / 1000000);
+                result_us %= 1000000;
+
+                u64 result_ms = static_cast<u64>(result_us / 1000);
+                result_us %= 1000;
+
+                u64 result_us_remaining = result_us; // Remaining microseconds
+
+                return Duration(result_h, result_m, result_s, result_ms, result_us_remaining);
             };
 
             constexpr Duration operator-(const Duration &other) const noexcept
