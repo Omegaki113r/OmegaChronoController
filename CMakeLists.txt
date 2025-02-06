@@ -1,7 +1,4 @@
 set(PROJ_SOURCES    
-                    src/ChronoBase.cpp
-                    src/ChronoCore.cpp
-                    src/ChronoSingleshotController.cpp
                     src/ChronoFreeRTOSController.cpp
                 )
 

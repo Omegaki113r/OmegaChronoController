@@ -10,7 +10,7 @@
  * File Created: Monday, 3rd February 2025 6:40:37 pm
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 5th February 2025 3:39:45 am
+ * Last Modified: Friday, 7th February 2025 12:48:22 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -23,6 +23,38 @@
 
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
+#include <sdkconfig.h>
+#if CONFIG_OMEGA_CHRONO_CONTROLLER_DEBUG
+#define LOGD(format, ...) OMEGA_LOGD(format, ##__VA_ARGS__)
+#define HEX_LOGD(buffer, length) OMEGA_HEX_LOGD(buffer, length)
+#else
+#define LOGD(format, ...)
+#define HEX_LOGD(buffer, length)
+#endif
+#if CONFIG_OMEGA_CHRONO_CONTROLLER_INFO
+#define LOGI(format, ...) OMEGA_LOGI(format, ##__VA_ARGS__)
+#define HEX_LOGI(buffer, length) OMEGA_HEX_LOGI(buffer, length)
+#else
+#define LOGI(format, ...)
+#define HEX_LOGI(buffer, length)
+#endif
+
+#if CONFIG_OMEGA_CHRONO_CONTROLLER_WARN
+#define LOGW(format, ...) OMEGA_LOGW(format, ##__VA_ARGS__)
+#define HEX_LOGW(buffer, length) OMEGA_HEX_LOGW(buffer, length)
+#else
+#define LOGW(format, ...)
+#define HEX_LOGW(buffer, length)
+#endif
+
+#if CONFIG_OMEGA_CHRONO_CONTROLLER_ERROR
+#define LOGE(format, ...) OMEGA_LOGE(format, ##__VA_ARGS__)
+#define HEX_LOGE(buffer, length) OMEGA_HEX_LOGE(buffer, length)
+#else
+#define LOGE(format, ...)
+#define HEX_LOGE(buffer, length)
+#endif
+
 namespace Omega
 {
     namespace Chrono
@@ -34,6 +66,11 @@ namespace Omega
             u8 s;
             u16 ms;
             u64 us;
+
+            constexpr u16 us_to_ms(const auto in_us) { return in_us / 1000; }
+            constexpr u8 ms_to_s(const auto in_ms) { return in_ms / 1000; }
+            constexpr u8 s_to_mins(const auto in_s) { return in_s / 60; }
+            constexpr u16 mins_to_hrs(const auto in_mins) { return in_mins / 60; }
 
             constexpr Duration() : h(0), m(0), s(0), ms(0), us(0) {}
             constexpr Duration(u16 in_h) : h(in_h), m(0), s(0), ms(0), us(0) {}
@@ -168,10 +205,6 @@ namespace Omega
                 return {0, 0, 0, 0, in_time_us};
             }
 
-            constexpr u64 get_in_hours() const noexcept
-            {
-                return h + (m / 60) + (s / (60 * 60)) + (ms / (60 * 60 * 1000)) + (us / (60 * 60 * 1000 * 1000));
-            }
             constexpr u64 get_in_msecs() const noexcept
             {
                 return (h * 60 * 60 * 1000) + (m * 60 * 1000) + (s * 1000) + ms + (us / 1000);
@@ -234,3 +267,23 @@ namespace Omega
         };
     } // namespace Chrono
 } // namespace Omega
+
+#if CONFIG_OMEGA_CHRONO_CONTROLLER_DEBUG
+#undef LOGD
+#undef HEX_LOGD
+#endif
+
+#if CONFIG_OMEGA_CHRONO_CONTROLLER_INFO
+#undef LOGI
+#undef HEX_LOGI
+#endif
+
+#if CONFIG_OMEGA_CHRONO_CONTROLLER_WARN
+#undef LOGW
+#undef HEX_LOGW
+#endif
+
+#if CONFIG_OMEGA_CHRONO_CONTROLLER_ERROR
+#undef LOGE
+#undef HEX_LOGE
+#endif
