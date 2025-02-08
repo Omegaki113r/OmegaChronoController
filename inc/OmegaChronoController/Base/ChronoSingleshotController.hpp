@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:19:29 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Friday, 7th February 2025 12:34:00 am
+ * Last Modified: Sunday, 9th February 2025 3:03:11 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -21,8 +21,8 @@
  */
 #pragma once
 
-#include "OmegaChronoController/ChronoBase.hpp"
-#include "OmegaChronoController/ChronoCallbacks.hpp"
+#include "OmegaChronoController/Base/ChronoBase.hpp"
+#include "OmegaChronoController/Base/ChronoCallbacks.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
 #include <sdkconfig.h>

@@ -10,4 +10,4 @@ set( EXTRA_COMPONENT_DIRS ${CHRONO_CONTROLLER_PATH})
 add_compile_definitions(CONFIG_OMEGA_LOGGING=1)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
-project(periodic-FreeRTOS)
+project(FreeRTOS)
