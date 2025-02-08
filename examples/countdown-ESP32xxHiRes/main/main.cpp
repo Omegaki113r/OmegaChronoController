@@ -10,7 +10,7 @@
  * File Created: Sunday, 19th January 2025 12:42:20 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Saturday, 8th February 2025 6:27:47 pm
+ * Last Modified: Saturday, 8th February 2025 6:44:54 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -73,12 +73,6 @@ extern "C" void app_main(void)
         if (const auto state = countdown.stop(); eSUCCESS != state)
         {
             OMEGA_LOGE("countdown stop failed");
-            return;
-        }
-        delay_s(5);
-        if (const auto state = countdown.resume(); eSUCCESS != state)
-        {
-            OMEGA_LOGE("countdown resume failed");
             return;
         }
     }
