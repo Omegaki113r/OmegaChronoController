@@ -10,7 +10,7 @@
  * File Created: Sunday, 19th January 2025 12:42:20 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Sunday, 9th February 2025 3:02:38 am
+ * Last Modified: Sunday, 9th February 2025 3:37:25 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -32,21 +32,17 @@
 
 auto singleshot = ::Omega::Chrono::Singleshot(::Omega::Chrono::FreeRTOS())
                       .name("Singleshot")
-                      .delay({0})
                       .duration({0, 0, 10});
 auto periodic = ::Omega::Chrono::Periodic(::Omega::Chrono::FreeRTOS())
                     .name("Periodic")
-                    .delay({0})
                     .update_duration({0, 0, 1})
                     .duration({0, 0, 10});
 auto countup = ::Omega::Chrono::Countup(::Omega::Chrono::FreeRTOS())
                    .name("Countup")
-                   .delay({0})
                    .update_duration({0, 0, 1})
                    .duration({0, 1});
 auto countdown = ::Omega::Chrono::Countdown(::Omega::Chrono::FreeRTOS())
                      .name("Countdown")
-                     .delay({0})
                      .update_duration({0, 0, 1})
                      .duration({0, 1});
 
