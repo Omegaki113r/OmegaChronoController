@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:51:41 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Thursday, 6th February 2025 11:08:43 pm
+ * Last Modified: Saturday, 8th February 2025 5:18:09 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -27,8 +27,8 @@
 #include "FreeRTOS/semphr.h"
 #include "FreeRTOS/timers.h"
 
-#include "OmegaChronoController/ChronoBase.hpp"
-#include "OmegaChronoController/ChronoFreeRTOSController.hpp"
+#include "OmegaChronoController/AL/ChronoFreeRTOSController.hpp"
+#include "OmegaChronoController/Base/ChronoBase.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
 #include <sdkconfig.h>

@@ -10,7 +10,7 @@
  * File Created: Thursday, 6th February 2025 5:36:44 pm
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Thursday, 6th February 2025 5:38:06 pm
+ * Last Modified: Saturday, 8th February 2025 5:19:15 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
@@ -23,7 +23,7 @@
 
 #include <functional>
 
-#include "OmegaChronoController/Duration.hpp"
+#include "OmegaChronoController/Base/Duration.hpp"
 
 namespace Omega
 {

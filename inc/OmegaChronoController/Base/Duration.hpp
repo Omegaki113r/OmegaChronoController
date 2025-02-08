@@ -10,7 +10,7 @@
  * File Created: Monday, 3rd February 2025 6:40:37 pm
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Friday, 7th February 2025 12:48:22 am
+ * Last Modified: Saturday, 8th February 2025 5:52:44 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -71,6 +71,14 @@ namespace Omega
             constexpr u8 ms_to_s(const auto in_ms) { return in_ms / 1000; }
             constexpr u8 s_to_mins(const auto in_s) { return in_s / 60; }
             constexpr u16 mins_to_hrs(const auto in_mins) { return in_mins / 60; }
+            constexpr u64 to_us() const
+            {
+                const auto hour_us = h * 60 * 60 * 1000 * 1000;
+                const auto minutes_us = m * 60 * 1000 * 1000;
+                const auto seconds_us = s * 1000 * 1000;
+                const auto milliseconds_us = ms * 1000;
+                return hour_us + minutes_us + seconds_us + milliseconds_us + us;
+            }
 
             constexpr Duration() : h(0), m(0), s(0), ms(0), us(0) {}
             constexpr Duration(u16 in_h) : h(in_h), m(0), s(0), ms(0), us(0) {}
