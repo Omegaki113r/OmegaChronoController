@@ -10,7 +10,7 @@
  * File Created: Saturday, 8th February 2025 5:22:19 pm
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Saturday, 8th February 2025 6:42:49 pm
+ * Last Modified: Sunday, 9th February 2025 6:19:13 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
@@ -125,10 +125,13 @@ namespace Omega
             {
                 xSemaphoreTake(duration_expire_semaphore, portMAX_DELAY);
             } while (looping && !should_end);
-            if (const auto err = esp_timer_stop(handle); err != ESP_OK)
+            if (esp_timer_is_active(handle))
             {
-                LOGE("Timer stop failed");
-                return eFAILED;
+                if (const auto err = esp_timer_stop(handle); err != ESP_OK)
+                {
+                    LOGE("Timer stop failed with %s", esp_err_to_name(err));
+                    return eFAILED;
+                }
             }
             if (const auto err = esp_timer_delete(handle); ESP_OK != err)
             {
