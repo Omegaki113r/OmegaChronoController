@@ -75,6 +75,54 @@
 ::Omega::Chrono::Countup countup = ::Omega::Chrono::Countup(::Omega::Chrono::ESP32xxGP());
 ```
 
+## Events from timers
+
+Following events are supported by `::Omega::Chrono::Base` and callbacks can be registered on the timers to receive the events. 
+1. on start `std::function<void(const char *)>`
+
+2. on resumed `std::function<void(const char *)>`
+
+3. on update `std::function<bool(const char *,const Duration)>`
+
+4. on paused `std::function<void(const char *)>`
+
+5. on stopped `std::function<void(const char *)>`
+
+#### Examples
+```cpp
+::Omega::Chrono::Periodic periodic = ::Omega::Chrono::Periodic(::Omega::Chrono::FreeRTOS());
+
+const auto on_start = [&](const char *name)
+{ 
+    OMEGA_LOGI("[%s] started", name); 
+};
+const auto on_resume = [&](const char *name)
+{ 
+    OMEGA_LOGI("[%s] resumed", name); 
+};
+const auto on_update = [&](const char *name, const ::Omega::Chrono::Duration &duration)
+{ 
+    OMEGA_LOGI("[%s] Update: %.2d:%.2d:%.2d.%.3d.%.3lld",name, duration.h, duration.m, duration.s, duration.ms, duration.us); 
+    return true; 
+};
+const auto on_pause = [&](const char *name)
+{ 
+    OMEGA_LOGI("[%s] paused", name); 
+};
+const auto on_stop = [&](const char *name)
+{ 
+    OMEGA_LOGI("[%s] stopped", name); 
+};
+
+singleshot.add_on_start_callback(on_start);
+singleshot.add_on_resume_callback(on_resume);
+singleshot.add_on_update_callback(on_update);
+singleshot.add_on_pause_callback(on_pause);
+singleshot.add_on_stop_callback(on_stop);
+
+periodic.start();
+```
+
 ## Controling timers
 
 Timers do not automatically run once instantiated. They need to be explicitly started to be ran. Just like starting there are additional ways to control the timers
@@ -147,53 +195,4 @@ constexpr inline void set_update_period(Duration in_delay) noexcept;
 
 periodic.start();
 periodic2.start();
-```
-
-
-## Events from timers
-
-Following events are supported by `::Omega::Chrono::Base` and callbacks can be registered on the timers to receive the events. 
-1. on start `std::function<void(const char *)>`
-
-2. on resumed `std::function<void(const char *)>`
-
-3. on update `std::function<bool(const char *,const Duration)>`
-
-4. on paused `std::function<void(const char *)>`
-
-5. on stopped `std::function<void(const char *)>`
-
-#### Examples
-```cpp
-::Omega::Chrono::Periodic periodic = ::Omega::Chrono::Periodic(::Omega::Chrono::FreeRTOS());
-
-const auto on_start = [&](const char *name)
-{ 
-    OMEGA_LOGI("[%s] started", name); 
-};
-const auto on_resume = [&](const char *name)
-{ 
-    OMEGA_LOGI("[%s] resumed", name); 
-};
-const auto on_update = [&](const char *name, const ::Omega::Chrono::Duration &duration)
-{ 
-    OMEGA_LOGI("[%s] Update: %.2d:%.2d:%.2d.%.3d.%.3lld",name, duration.h, duration.m, duration.s, duration.ms, duration.us); 
-    return true; 
-};
-const auto on_pause = [&](const char *name)
-{ 
-    OMEGA_LOGI("[%s] paused", name); 
-};
-const auto on_stop = [&](const char *name)
-{ 
-    OMEGA_LOGI("[%s] stopped", name); 
-};
-
-singleshot.add_on_start_callback(on_start);
-singleshot.add_on_resume_callback(on_resume);
-singleshot.add_on_update_callback(on_update);
-singleshot.add_on_pause_callback(on_pause);
-singleshot.add_on_stop_callback(on_stop);
-
-periodic.start();
 ```
