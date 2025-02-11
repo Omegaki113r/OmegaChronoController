@@ -2,7 +2,7 @@
  * @file ChronoCallbacks.hpp
  * @author Omegaki113r
  * @date Thursday, 6th February 2025 5:36:44 pm
- * @copyright Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
+ * @copyright Copyright 2025 - 2025 0m3g4ki113r, Xtronic
  * */
 /*
  * Project: OmegaChronoController
@@ -10,10 +10,10 @@
  * File Created: Thursday, 6th February 2025 5:36:44 pm
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Sunday, 9th February 2025 6:09:38 pm
+ * Last Modified: Wednesday, 12th February 2025 1:29:05 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
+ * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
  * -----
  * HISTORY:
  * Date      	By	Comments

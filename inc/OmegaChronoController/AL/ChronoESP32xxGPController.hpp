@@ -2,7 +2,7 @@
  * @file ChronoESP32xxGPController.hpp
  * @author Omegaki113r
  * @date Wednesday, 12th February 2025 12:04:30 am
- * @copyright Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
+ * @copyright Copyright 2025 - 2025 0m3g4ki113r, Xtronic
  * */
 /*
  * Project: AL
@@ -10,10 +10,10 @@
  * File Created: Wednesday, 12th February 2025 12:04:30 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 12th February 2025 12:11:11 am
+ * Last Modified: Wednesday, 12th February 2025 1:29:05 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
+ * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
  * -----
  * HISTORY:
  * Date      	By	Comments

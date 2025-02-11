@@ -2,7 +2,7 @@
  * @file ChronoESP32xxHiResController.cpp
  * @author Omegaki113r
  * @date Saturday, 8th February 2025 5:22:19 pm
- * @copyright Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
+ * @copyright Copyright 2025 - 2025 0m3g4ki113r, Xtronic
  * */
 /*
  * Project: src
@@ -10,10 +10,10 @@
  * File Created: Saturday, 8th February 2025 5:22:19 pm
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Sunday, 9th February 2025 6:19:13 pm
+ * Last Modified: Wednesday, 12th February 2025 1:29:05 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Copyright <<projectCreationYear>> - 2025 0m3g4ki113r, Xtronic
+ * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
  * -----
  * HISTORY:
  * Date      	By	Comments
