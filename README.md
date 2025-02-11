@@ -1,1 +1,1 @@
-# OmegaControllerTemplate
+# OmegaChronoController
