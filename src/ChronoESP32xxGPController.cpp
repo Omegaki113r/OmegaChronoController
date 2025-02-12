@@ -10,7 +10,7 @@
  * File Created: Wednesday, 12th February 2025 12:07:35 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 12th February 2025 7:35:15 pm
+ * Last Modified: Wednesday, 12th February 2025 7:38:03 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -131,6 +131,7 @@ namespace Omega
                 if (const auto err = gptimer_set_alarm_action(m_handle, &alarm_config); ESP_OK != err)
                 {
                     LOGE("gptimer_set_alarm_action failed. %s", esp_err_to_name(err));
+                    LOGE("Alarm Count: %lld | Reload Count: %lld", alarm_config.alarm_count, alarm_config.reload_count);
                     return eFAILED;
                 }
             }
