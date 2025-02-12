@@ -27,7 +27,7 @@
 ### Dependencies
 >- [OmegaUtilityDriver](https://github.com/Omegaki113r/OmegaUtilityDriver "OmegaUtilityDriver")
 >
-> This is an Opensource MIT licenced supporting library that includes the logging feature that is being used in the OmegaChornoController as well as the definitions and implementation of ``Duration`` which defines the time
+> This is an Opensource MIT licenced supporting library that includes the logging feature that is being used in the OmegaChornoController as well as the definitions and implementation of ``Duration`` which defines data structure for timing (Delay, Duration, Update Period)
  
 ## Singleshot Controller
 
