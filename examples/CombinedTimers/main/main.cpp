@@ -10,7 +10,7 @@
  * File Created: Sunday, 19th January 2025 12:42:20 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 12th February 2025 8:06:29 pm
+ * Last Modified: Thursday, 13th February 2025 12:16:46 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -34,18 +34,24 @@
 auto freertos = ::Omega::Chrono::Countup(::Omega::Chrono::FreeRTOS())
                     .name("freertos")
                     .delay({0})
-                    .update_period({0, 0, 0, 100})
+                    .update_period({0, 0, 0, 20})
                     .duration({24, 0, 0});
 auto general_purpose = ::Omega::Chrono::Countup(::Omega::Chrono::ESP32xxGP())
                            .name("general")
                            .delay({0})
-                           .update_period({0, 0, 0, 50})
+                           .update_period({0, 0, 30, 0})
                            .duration({24, 0, 0});
 auto high_res = ::Omega::Chrono::Countup(::Omega::Chrono::ESP32xxHiRes())
                     .name("high res")
                     .delay({0})
-                    .update_period({0, 0, 0, 50})
+                    .update_period({0, 0, 0, 20})
                     .duration({24, 0, 0});
+
+auto countdown = ::Omega::Chrono::Countdown(::Omega::Chrono::FreeRTOS())
+                     .name("countdown")
+                     .delay({0})
+                     .update_period({0, 0, 1})
+                     .duration({0, 10, 0});
 
 extern "C" void app_main(void)
 {
@@ -67,10 +73,10 @@ extern "C" void app_main(void)
         freertos.add_on_update_callback(on_update);
         freertos.add_on_pause_callback(on_pause);
         freertos.add_on_stop_callback(on_stop);
-        if (const auto err = freertos.start(); err != eSUCCESS)
-        {
-            OMEGA_LOGE("%s start failed", freertos.get_name());
-        }
+        // if (const auto err = freertos.start(); err != eSUCCESS)
+        // {
+        //     OMEGA_LOGE("%s start failed", freertos.get_name());
+        // }
 
         general_purpose.add_on_start_callback(on_start);
         general_purpose.add_on_resume_callback(on_resume);
@@ -87,9 +93,23 @@ extern "C" void app_main(void)
         high_res.add_on_update_callback(on_update);
         high_res.add_on_pause_callback(on_pause);
         high_res.add_on_stop_callback(on_stop);
-        if (const auto err = high_res.start(); err != eSUCCESS)
+        // if (const auto err = high_res.start(); err != eSUCCESS)
+        // {
+        //     OMEGA_LOGE("%s start failed", high_res.get_name());
+        // }
+
+        countdown.add_on_start_callback(on_start);
+        countdown.add_on_resume_callback(on_resume);
+        countdown.add_on_update_callback(on_update);
+        countdown.add_on_pause_callback(on_pause);
+        countdown.add_on_stop_callback(on_stop);
+        if (const auto err = countdown.start(); err != eSUCCESS)
         {
-            OMEGA_LOGE("%s start failed", high_res.get_name());
+            OMEGA_LOGE("%s start failed", countdown.get_name());
         }
+    }
+    for (;;)
+    {
+        delay({0, 0, 0, 20});
     }
 }

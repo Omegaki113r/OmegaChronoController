@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:16:08 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 12th February 2025 5:40:03 pm
+ * Last Modified: Thursday, 13th February 2025 12:20:21 am
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -56,6 +56,8 @@
 #define LOGE(format, ...)
 #define HEX_LOGE(buffer, length)
 #endif
+
+constexpr u16 stack_size = configMINIMAL_STACK_SIZE * 2;
 
 namespace Omega
 {

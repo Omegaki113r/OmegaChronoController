@@ -1,11 +1,11 @@
 dependencies:
   OmegaUtilityDriver:
-    component_hash: 66d27999d77127db24175a9728bcb8a125a2f4c7b8074080dd11b6673b198a86
+    component_hash: 517ea4406b037cfb565f4d78957cbe62008e29c65448985bf65dea3e695e01d1
     source:
       git: https://github.com/Omegaki113r/OmegaUtilityDriver.git
       path: .
       type: git
-    version: 9125ddde18e992ac4c3f91d526920c19e7f062c5
+    version: a4d3f502751b8cdd50ffcc9a1ddaf9247ce00cf8
   idf:
     component_hash: null
     source:

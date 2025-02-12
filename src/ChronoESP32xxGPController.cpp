@@ -10,7 +10,7 @@
  * File Created: Wednesday, 12th February 2025 12:07:35 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 12th February 2025 7:38:03 pm
+ * Last Modified: Wednesday, 12th February 2025 11:48:47 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -116,22 +116,28 @@ namespace Omega
             if (looping)
             {
                 m_type = Type::ePERIODIC;
-                const gptimer_alarm_config_t alarm_config{1 * 1000 * 1000 * Duration::to_secs(update_period), 0, {true}};
+                u64 frequency = 1 * 1000 * 1000;
+                frequency = frequency * 1000 * 1000 * Duration::to_secs(update_period);
+                frequency = frequency / (1000 * 1000);
+                const gptimer_alarm_config_t alarm_config{frequency, 0, {true}};
+                LOGD("Alarm Count: %lld | Reload Count: %lld", alarm_config.alarm_count, alarm_config.reload_count);
                 if (const auto err = gptimer_set_alarm_action(m_handle, &alarm_config); ESP_OK != err)
                 {
                     LOGE("gptimer_set_alarm_action failed. %s", esp_err_to_name(err));
-                    LOGE("Alarm Count: %lld | Reload Count: %lld", alarm_config.alarm_count, alarm_config.reload_count);
                     return eFAILED;
                 }
             }
             else
             {
                 m_type = Type::eSINGLE;
-                const gptimer_alarm_config_t alarm_config{1 * 1000 * 1000 * Duration::to_secs(update_period), 0, {false}};
+                u64 frequency = 1 * 1000 * 1000;
+                frequency = frequency * 1000 * 1000 * Duration::to_usecs(update_period);
+                frequency = frequency / (1000 * 1000);
+                const gptimer_alarm_config_t alarm_config{frequency, 0, {false}};
+                LOGD("Alarm Count: %lld | Reload Count: %lld", alarm_config.alarm_count, alarm_config.reload_count);
                 if (const auto err = gptimer_set_alarm_action(m_handle, &alarm_config); ESP_OK != err)
                 {
                     LOGE("gptimer_set_alarm_action failed. %s", esp_err_to_name(err));
-                    LOGE("Alarm Count: %lld | Reload Count: %lld", alarm_config.alarm_count, alarm_config.reload_count);
                     return eFAILED;
                 }
             }

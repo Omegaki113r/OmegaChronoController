@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:51:41 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Saturday, 8th February 2025 5:18:09 pm
+ * Last Modified: Wednesday, 12th February 2025 11:59:45 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -67,7 +67,7 @@ namespace Omega
 {
     namespace Chrono
     {
-        constexpr inline TickType_t get_ticks(const Duration &in_duration) { return pdMS_TO_TICKS(in_duration.get_in_msecs()); }
+        constexpr inline TickType_t get_ticks(const Duration &in_duration) { return pdMS_TO_TICKS(static_cast<u64>(Duration::to_msecs(in_duration))); }
 
         FreeRTOS::~FreeRTOS()
         {
@@ -119,7 +119,7 @@ namespace Omega
             }
             auto should_end = false;
             auto looping = pdFALSE;
-            const auto update_ticks = pdMS_TO_TICKS(in_update_period.get_in_msecs());
+            const auto update_ticks = pdMS_TO_TICKS(static_cast<u64>(Duration::to_msecs(in_update_period)));
             if (in_update_period != in_duration)
                 looping = pdTRUE;
             Data data{"", duration_expire_semaphore, should_end, get_on_update()};
