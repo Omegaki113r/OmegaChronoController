@@ -10,7 +10,7 @@
  * File Created: Sunday, 19th January 2025 12:42:20 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 12th February 2025 1:20:13 am
+ * Last Modified: Wednesday, 12th February 2025 5:40:03 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -36,17 +36,17 @@ auto singleshot = ::Omega::Chrono::Singleshot(::Omega::Chrono::ESP32xxGP())
 auto periodic = ::Omega::Chrono::Periodic(::Omega::Chrono::ESP32xxGP())
                     .name("Periodic")
                     .delay({0})
-                    .update_duration({0, 0, 1})
+                    .update_period({0, 0, 1})
                     .duration({0, 0, 10});
 auto countup = ::Omega::Chrono::Countup(::Omega::Chrono::ESP32xxGP())
                    .name("Countup")
                    .delay({0})
-                   .update_duration({0, 0, 1})
+                   .update_period({0, 0, 1})
                    .duration({0, 0, 30});
 auto countdown = ::Omega::Chrono::Countdown(::Omega::Chrono::ESP32xxGP())
                      .name("Countdown")
                      .delay({0})
-                     .update_duration({0, 0, 1})
+                     .update_period({0, 0, 1})
                      .duration({0, 0, 30});
 
 extern "C" void app_main(void)

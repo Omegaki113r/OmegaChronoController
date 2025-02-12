@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:14:46 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Sunday, 9th February 2025 6:09:46 pm
+ * Last Modified: Wednesday, 12th February 2025 5:40:03 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -127,7 +127,7 @@ namespace Omega
 
             virtual constexpr Base &name(const char *in_name) noexcept = 0;
             virtual constexpr Base &delay(Duration) noexcept = 0;
-            virtual constexpr Base &update_duration(Duration) noexcept = 0;
+            virtual constexpr Base &update_period(Duration) noexcept = 0;
             virtual constexpr Base &duration(Duration) noexcept = 0;
         };
     } // namespace Chrono

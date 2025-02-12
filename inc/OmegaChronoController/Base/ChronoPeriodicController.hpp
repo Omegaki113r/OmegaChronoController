@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:20:06 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Sunday, 9th February 2025 3:03:03 am
+ * Last Modified: Wednesday, 12th February 2025 5:40:03 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -82,7 +82,7 @@ namespace Omega
                 return *this;
             }
 
-            constexpr Periodic &update_duration(Duration in_update_period) noexcept override
+            constexpr Periodic &update_period(Duration in_update_period) noexcept override
             {
                 set_update_period(in_update_period);
                 return *this;
