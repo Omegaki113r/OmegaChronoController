@@ -153,11 +153,11 @@ constexpr inline void set_delay(Duration in_delay) noexcept;
 #### Examples
 ```cpp
 ::Omega::Chrono::Periodic periodic = ::Omega::Chrono::Periodic(::Omega::Chrono::FreeRTOS())
-                                        .delay({0,0,10});                   // This delays the start of the timer by 10 seconds
+                                        .delay({0,0,10});   // This delays the start of the timer by 10 seconds
 ::Omega::Chrono::Periodic periodic1 = ::Omega::Chrono::Periodic(::Omega::Chrono::FreeRTOS())
-                                        .delay({0,10,0});                   // This delays the start of the timer by 10 minutes
+                                        .delay({0,10,0});   // This delays the start of the timer by 10 minutes
 ::Omega::Chrono::Periodic periodic2 = ::Omega::Chrono::Periodic(::Omega::Chrono::FreeRTOS())
-                                        .delay({0,0,0,50});                 // This delays the start of the timer by 50 milliseconds                                        
+                                        .delay({0,0,0,50}); // This delays the start of the timer by 50 milliseconds                                        
 
 
 ::Omega::Chrono::Periodic periodic3 = ::Omega::Chrono::Periodic(::Omega::Chrono::FreeRTOS());
@@ -186,12 +186,12 @@ constexpr inline void set_update_period(Duration in_delay) noexcept;
 #### Examples
 ```cpp
 ::Omega::Chrono::Periodic periodic = ::Omega::Chrono::Periodic(::Omega::Chrono::FreeRTOS())
-                                        .duration({0,0,10});                // This duration of the timer is 10 seconds                                      
+                                        .duration({0,0,10});        // This duration of the timer is 10 seconds                                      
 
 
 ::Omega::Chrono::Periodic periodic2 = ::Omega::Chrono::Periodic(::Omega::Chrono::FreeRTOS())
-                                        .update_period({0,0,1});            // This update period of the timer is 10 seconds  
-                                        .duration({0,0,10});                // This duration of the timer is 10 seconds  
+                                        .update_period({0,0,1});    // This update period of the timer is 10 seconds  
+                                        .duration({0,0,10});        // This duration of the timer is 10 seconds  
 
 periodic.start();
 periodic2.start();
