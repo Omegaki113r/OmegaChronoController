@@ -1,10 +1,6 @@
-set(PROJ_SOURCES    
-                    src/FreeRTOSController.cpp
-                    src/ESP32xxHiResController.cpp
-                    src/ESP32xxGPController.cpp
-                )
+cmake_minimum_required(VERSION 3.8)
 
-idf_component_register( SRCS            ${PROJ_SOURCES}
-                        INCLUDE_DIRS    inc
-                        REQUIRES        OmegaUtilityDriver esp_timer esp_driver_gptimer
-                        )
+set(CHRONO_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
+if(ESP_PLATFORM)
+  include(${CMAKE_CURRENT_LIST_DIR}/cmake/ESP32xx.cmake)
+endif()
