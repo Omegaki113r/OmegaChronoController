@@ -1,9 +1,10 @@
+set(PROJ_INC_DIR ${PROJ_ROOT_DIR}/inc)
 set(PROJ_SOURCES    
-                    ${CHRONO_ROOT_DIR}/src/FreeRTOSController.cpp
-                    ${CHRONO_ROOT_DIR}/src/ESP32xxHiResController.cpp
-                    ${CHRONO_ROOT_DIR}/src/ESP32xxGPController.cpp
+                    ${PROJ_ROOT_DIR}/src/FreeRTOSController.cpp
+                    ${PROJ_ROOT_DIR}/src/ESP32xxHiResController.cpp
+                    ${PROJ_ROOT_DIR}/src/ESP32xxGPController.cpp
                 )
 idf_component_register( SRCS            ${PROJ_SOURCES}
-                        INCLUDE_DIRS    ${CHRONO_ROOT_DIR}/inc
+                        INCLUDE_DIRS    ${PROJ_INC_DIR}
                         REQUIRES        OmegaUtilityDriver esp_timer esp_driver_gptimer
                         )
