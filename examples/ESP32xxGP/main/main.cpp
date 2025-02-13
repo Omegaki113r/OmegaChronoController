@@ -10,7 +10,7 @@
  * File Created: Sunday, 19th January 2025 12:42:20 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 12th February 2025 5:40:03 pm
+ * Last Modified: Thursday, 13th February 2025 3:41:13 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -22,11 +22,11 @@
 
 #include <cstdio>
 
-#include "OmegaChronoController/AL/ChronoESP32xxGPController.hpp"
-#include "OmegaChronoController/Base/ChronoCountdownController.hpp"
-#include "OmegaChronoController/Base/ChronoCountupController.hpp"
-#include "OmegaChronoController/Base/ChronoPeriodicController.hpp"
-#include "OmegaChronoController/Base/ChronoSingleshotController.hpp"
+#include "OmegaChronoController/Abstraction/ChronoESP32xxGPController.hpp"
+#include "OmegaChronoController/Core/ChronoCountdownController.hpp"
+#include "OmegaChronoController/Core/ChronoCountupController.hpp"
+#include "OmegaChronoController/Core/ChronoPeriodicController.hpp"
+#include "OmegaChronoController/Core/ChronoSingleshotController.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
 auto singleshot = ::Omega::Chrono::Singleshot(::Omega::Chrono::ESP32xxGP())

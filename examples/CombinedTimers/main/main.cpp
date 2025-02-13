@@ -10,7 +10,7 @@
  * File Created: Sunday, 19th January 2025 12:42:20 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Thursday, 13th February 2025 12:39:29 am
+ * Last Modified: Thursday, 13th February 2025 3:51:08 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -22,13 +22,13 @@
 
 #include <cstdio>
 
-#include "OmegaChronoController/AL/ChronoESP32xxGPController.hpp"
-#include "OmegaChronoController/AL/ChronoESP32xxHiResController.hpp"
-#include "OmegaChronoController/AL/ChronoFreeRTOSController.hpp"
-#include "OmegaChronoController/Base/ChronoCountdownController.hpp"
-#include "OmegaChronoController/Base/ChronoCountupController.hpp"
-#include "OmegaChronoController/Base/ChronoPeriodicController.hpp"
-#include "OmegaChronoController/Base/ChronoSingleshotController.hpp"
+#include "OmegaChronoController/Abstraction/ESP32xxGPController.hpp"
+#include "OmegaChronoController/Abstraction/ESP32xxHiResController.hpp"
+#include "OmegaChronoController/Abstraction/FreeRTOSController.hpp"
+#include "OmegaChronoController/Core/CountdownController.hpp"
+#include "OmegaChronoController/Core/CountupController.hpp"
+#include "OmegaChronoController/Core/PeriodicController.hpp"
+#include "OmegaChronoController/Core/SingleshotController.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
 auto freertos = ::Omega::Chrono::Countup(::Omega::Chrono::FreeRTOS())

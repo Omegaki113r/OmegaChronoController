@@ -10,7 +10,7 @@
  * File Created: Saturday, 8th February 2025 5:22:19 pm
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 12th February 2025 1:29:05 am
+ * Last Modified: Thursday, 13th February 2025 3:37:45 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -23,7 +23,7 @@
 #include <FreeRTOS/semphr.h>
 #include <FreeRTOS/timers.h>
 
-#include "OmegaChronoController/AL/ChronoESP32xxHiResController.hpp"
+#include "OmegaChronoController/Abstraction/ESP32xxHiResController.hpp"
 
 #include <sdkconfig.h>
 #if CONFIG_OMEGA_CHRONO_CONTROLLER_DEBUG

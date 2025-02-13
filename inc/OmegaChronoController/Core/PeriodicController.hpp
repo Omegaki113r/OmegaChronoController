@@ -1,16 +1,16 @@
 /**
- * @file ChronoCountupController.hpp
+ * @file ChronoPeriodicController.hpp
  * @author Omegaki113r
- * @date Wednesday, 29th January 2025 4:18:30 am
+ * @date Wednesday, 29th January 2025 4:20:06 am
  * @copyright Copyright 2025 - 2025 0m3g4ki113r, Xtronic
  * */
 /*
  * Project: OmegaChronoController
- * File Name: ChronoCountupController.hpp
- * File Created: Wednesday, 29th January 2025 4:18:30 am
+ * File Name: ChronoPeriodicController.hpp
+ * File Created: Wednesday, 29th January 2025 4:20:06 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 12th February 2025 5:40:03 pm
+ * Last Modified: Thursday, 13th February 2025 3:43:35 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -21,7 +21,8 @@
  */
 #pragma once
 
-#include "OmegaChronoController/Base/ChronoBase.hpp"
+#include "OmegaChronoController/Core/Callbacks.hpp"
+#include "OmegaChronoController/Core/CoreBase.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
 #include <sdkconfig.h>
@@ -61,33 +62,33 @@ namespace Omega
     namespace Chrono
     {
         template <typename T>
-        class Countup : public Base
+        class Periodic : public Base
         {
             T core;
             Duration elapsed_duration{0};
 
         public:
-            constexpr Countup(T in_core) : core(in_core) {}
+            constexpr Periodic(T in_core) : core(in_core) {}
 
-            constexpr Countup &name(const char *in_name) noexcept override
+            constexpr Periodic &name(const char *in_name) noexcept override
             {
                 set_name(in_name);
                 return *this;
             }
 
-            constexpr Countup &delay(Duration in_delay) noexcept override
+            constexpr Periodic &delay(Duration in_delay) noexcept override
             {
                 set_delay(in_delay);
                 return *this;
             }
 
-            constexpr Countup &update_period(Duration in_update_period) noexcept override
+            constexpr Periodic &update_period(Duration in_update_period) noexcept override
             {
                 set_update_period(in_update_period);
                 return *this;
             }
 
-            constexpr Countup &duration(Duration in_duration) noexcept override
+            constexpr Periodic &duration(Duration in_duration) noexcept override
             {
                 set_duration(in_duration);
                 return *this;
@@ -102,13 +103,12 @@ namespace Omega
                 }
                 if (Duration{0} == m_update_period)
                 {
-                    LOGE("Invalid Update Period");
+                    OMEGA_LOGE("Invalid Update Period");
                     return eFAILED;
                 }
-                elapsed_duration = Duration{0};
                 const auto timer_task = [](void *arg)
                 {
-                    Countup *controller = (Countup *)arg;
+                    Periodic *controller = (Periodic *)arg;
                     if (Duration{0} < controller->m_delay)
                     {
                         const auto on_start = [&](const char *name)
@@ -141,8 +141,6 @@ namespace Omega
                             const auto on_update_handler = controller->get_on_update_handler();
                             if (on_update_handler)
                                 on_update_handler(controller->m_name, controller->elapsed_duration);
-                            if (controller->m_duration <= controller->elapsed_duration)
-                                return true;
                             return false;
                         };
                         const auto on_end = [&](const char *name)
@@ -185,7 +183,6 @@ namespace Omega
                 return state;
             }
         };
-
     } // namespace Chrono
 } // namespace Omega
 

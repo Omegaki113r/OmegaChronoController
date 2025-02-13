@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:51:27 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Saturday, 8th February 2025 5:18:37 pm
+ * Last Modified: Thursday, 13th February 2025 3:42:43 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -24,9 +24,9 @@
 #include <FreeRTOS/FreeRTOS.h>
 #include <FreeRTOS/timers.h>
 
-#include "OmegaChronoController/AL/ChronoCore.hpp"
-#include "OmegaChronoController/Base/ChronoBase.hpp"
-#include "OmegaChronoController/Base/ChronoCallbacks.hpp"
+#include "OmegaChronoController/Abstraction/AbstractionBase.hpp"
+#include "OmegaChronoController/Core/Callbacks.hpp"
+#include "OmegaChronoController/Core/CoreBase.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
 namespace Omega

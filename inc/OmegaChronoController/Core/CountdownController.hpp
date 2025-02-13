@@ -1,16 +1,16 @@
 /**
- * @file ChronoPeriodicController.hpp
+ * @file ChronoCountdownController.hpp
  * @author Omegaki113r
- * @date Wednesday, 29th January 2025 4:20:06 am
+ * @date Wednesday, 29th January 2025 4:16:08 am
  * @copyright Copyright 2025 - 2025 0m3g4ki113r, Xtronic
  * */
 /*
  * Project: OmegaChronoController
- * File Name: ChronoPeriodicController.hpp
- * File Created: Wednesday, 29th January 2025 4:20:06 am
+ * File Name: ChronoCountdownController.hpp
+ * File Created: Wednesday, 29th January 2025 4:16:08 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 12th February 2025 5:40:03 pm
+ * Last Modified: Thursday, 13th February 2025 3:43:08 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -21,8 +21,8 @@
  */
 #pragma once
 
-#include "OmegaChronoController/Base/ChronoBase.hpp"
-#include "OmegaChronoController/Base/ChronoCallbacks.hpp"
+#include "OmegaChronoController/Core/CoreBase.hpp"
+#include "OmegaChronoController/Core/CountdownController.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
 #include <sdkconfig.h>
@@ -57,38 +57,40 @@
 #define HEX_LOGE(buffer, length)
 #endif
 
+constexpr u16 stack_size = configMINIMAL_STACK_SIZE * 2;
+
 namespace Omega
 {
     namespace Chrono
     {
         template <typename T>
-        class Periodic : public Base
+        class Countdown : public Base
         {
             T core;
             Duration elapsed_duration{0};
 
         public:
-            constexpr Periodic(T in_core) : core(in_core) {}
+            constexpr Countdown(T in_core) : core(in_core) {}
 
-            constexpr Periodic &name(const char *in_name) noexcept override
+            constexpr Countdown &name(const char *in_name) noexcept override
             {
                 set_name(in_name);
                 return *this;
             }
 
-            constexpr Periodic &delay(Duration in_delay) noexcept override
+            constexpr Countdown &delay(Duration in_delay) noexcept override
             {
                 set_delay(in_delay);
                 return *this;
             }
 
-            constexpr Periodic &update_period(Duration in_update_period) noexcept override
+            constexpr Countdown &update_period(Duration in_update_period) noexcept override
             {
                 set_update_period(in_update_period);
                 return *this;
             }
 
-            constexpr Periodic &duration(Duration in_duration) noexcept override
+            constexpr Countdown &duration(Duration in_duration) noexcept override
             {
                 set_duration(in_duration);
                 return *this;
@@ -103,12 +105,13 @@ namespace Omega
                 }
                 if (Duration{0} == m_update_period)
                 {
-                    OMEGA_LOGE("Invalid Update Period");
+                    LOGE("Invalid Update Period");
                     return eFAILED;
                 }
+                elapsed_duration = m_duration;
                 const auto timer_task = [](void *arg)
                 {
-                    Periodic *controller = (Periodic *)arg;
+                    Countdown *controller = (Countdown *)arg;
                     if (Duration{0} < controller->m_delay)
                     {
                         const auto on_start = [&](const char *name)
@@ -137,10 +140,12 @@ namespace Omega
                         };
                         const auto on_update = [&](const char *name, const Duration duration)
                         {
-                            controller->elapsed_duration = controller->elapsed_duration + controller->m_update_period;
+                            controller->elapsed_duration = controller->elapsed_duration - controller->m_update_period;
                             const auto on_update_handler = controller->get_on_update_handler();
                             if (on_update_handler)
                                 on_update_handler(controller->m_name, controller->elapsed_duration);
+                            if (Duration{0} == controller->elapsed_duration)
+                                return true;
                             return false;
                         };
                         const auto on_end = [&](const char *name)

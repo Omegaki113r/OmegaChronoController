@@ -1,16 +1,16 @@
 /**
- * @file ChronoESP32xxHiResController.hpp
+ * @file ChronoESP32xxGPController.hpp
  * @author Omegaki113r
- * @date Saturday, 8th February 2025 5:20:36 pm
+ * @date Wednesday, 12th February 2025 12:04:30 am
  * @copyright Copyright 2025 - 2025 0m3g4ki113r, Xtronic
  * */
 /*
  * Project: AL
- * File Name: ChronoESP32xxHiResController.hpp
- * File Created: Saturday, 8th February 2025 5:20:36 pm
+ * File Name: ChronoESP32xxGPController.hpp
+ * File Created: Wednesday, 12th February 2025 12:04:30 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Wednesday, 12th February 2025 1:29:05 am
+ * Last Modified: Thursday, 13th February 2025 3:42:07 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -19,24 +19,25 @@
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
  */
+
 #pragma once
 
-#include <esp_timer.h>
+#include <driver/gptimer.h>
 
-#include "OmegaChronoController/AL/ChronoCore.hpp"
-#include "OmegaChronoController/Base/ChronoBase.hpp"
-#include "OmegaChronoController/Base/ChronoCallbacks.hpp"
+#include "OmegaChronoController/Abstraction/AbstractionBase.hpp"
+#include "OmegaChronoController/Core/Callbacks.hpp"
+#include "OmegaChronoController/Core/CoreBase.hpp"
 #include "OmegaUtilityDriver/UtilityDriver.hpp"
 
 namespace Omega
 {
     namespace Chrono
     {
-        class ESP32xxHiRes : public Core
+        class ESP32xxGP : public Core
         {
         public:
-            ESP32xxHiRes() {}
-            ~ESP32xxHiRes() {}
+            ESP32xxGP() {}
+            ~ESP32xxGP() {}
 
             OmegaStatus start(Duration update_period, Duration duration) noexcept override;
             OmegaStatus resume() noexcept override;
@@ -49,10 +50,10 @@ namespace Omega
                 eSINGLE,
                 ePERIODIC
             };
-            Type type = Type::eSINGLE;
-            Duration duration;
-            Duration update_period;
-            esp_timer_handle_t handle;
+            Type m_type = Type::eSINGLE;
+            Duration m_duration;
+            Duration m_update_period;
+            gptimer_handle_t m_handle;
         };
     } // namespace Chrono
 } // namespace Omega
