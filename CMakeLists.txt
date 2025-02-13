@@ -1,7 +1,7 @@
 set(PROJ_SOURCES    
-                    src/ChronoFreeRTOSController.cpp
-                    src/ChronoESP32xxHiResController.cpp
-                    src/ChronoESP32xxGPController.cpp
+                    src/FreeRTOSController.cpp
+                    src/ESP32xxHiResController.cpp
+                    src/ESP32xxGPController.cpp
                 )
 
 idf_component_register( SRCS            ${PROJ_SOURCES}
