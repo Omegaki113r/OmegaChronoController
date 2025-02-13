@@ -29,6 +29,28 @@
 >
 > This is an Opensource MIT licenced supporting library that includes the logging feature that is being used in the OmegaChornoController as well as the definitions and implementation of ``Duration`` which defines data structure for timing (Delay, Duration, Update Period)
  
+ ### Compile Options
+
+ - OMEGA_CHRONO_CONTROLLER_DEBUG
+    
+    Enable/Disable Debug level logging of library
+
+ - OMEGA_CHRONO_CONTROLLER_INFO
+     
+    Enable/Disable Info level logging of library
+
+ - OMEGA_CHRONO_CONTROLLER_WARN
+    
+    Enable/Disable Warn level logging of library
+
+ - OMEGA_CHRONO_CONTROLLER_ERROR
+    
+    Enable/Disable Error level logging of library
+
+ - OMEGA_CHRONO_CONTROLLER_PROFILE
+    
+    Enable/Disable Profiling of library
+
 ## Singleshot Controller
 
 ```cpp
