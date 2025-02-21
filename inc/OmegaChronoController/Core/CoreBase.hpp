@@ -10,7 +10,7 @@
  * File Created: Wednesday, 29th January 2025 4:14:46 am
  * Author: Omegaki113r (omegaki113r@gmail.com)
  * -----
- * Last Modified: Thursday, 13th February 2025 3:41:53 pm
+ * Last Modified: Friday, 21st February 2025 2:05:23 pm
  * Modified By: Omegaki113r (omegaki113r@gmail.com)
  * -----
  * Copyright 2025 - 2025 0m3g4ki113r, Xtronic
@@ -110,6 +110,14 @@ namespace Omega
             inline void add_on_update_callback(on_update_handler in_callback) noexcept { m_on_update = in_callback; }
             inline void add_on_pause_callback(on_paused_handler in_callback) noexcept { m_on_paused = in_callback; }
             inline void add_on_stop_callback(on_stopped_handler in_callback) noexcept { m_on_stopped = in_callback; }
+            inline void add_callbacks(on_update_handler on_update, on_started_handler on_started = nullptr, on_resumed_handler on_resumed = nullptr, on_paused_handler on_paused = nullptr, on_stopped_handler on_stopped = nullptr) noexcept
+            {
+                m_on_update = on_update;
+                m_on_started = on_started;
+                m_on_resumed = on_resumed;
+                m_on_paused = on_paused;
+                m_on_stopped = on_stopped;
+            }
 
             constexpr inline const char *get_name() const noexcept { return m_name; }
             constexpr inline const on_delay_started_handler &get_on_delay_start_handler() const noexcept { return m_on_delay_started; }
